@@ -96,6 +96,21 @@ $a$와 $b$가 음이 아니고 동시에 0이 아닌 정수라 하면 다음을 
     $\gcd(a,b) = s\cdot a + t\cdot b$\footnote{선형 디오판토스 방정식 그중에서도 베주 항등식이라고도 한다.}
 \end{center}
 \end{justbox}
+
+\subsection{베주의 항등식}\par
+$ax + by =\gcd(x, y)$인 $a$, $b$가 존재한다.\par
+일반해는 $\gcd(x ,y)$의 배수이다.
+증명\par 
+집합 $S = \left\{ m | m =ax+by> , x\in \Zeta , y \in \Zeta \right\}$를 생각해보면, 이 집합 $S$는 $S \subset \Zeta$ ,  $S \subset \varnothing$ ( x, y를 원소로 가짐을 알 수 있다.) 자연수의 정렬성으로부터 최소가 되는 원소 $d$가 존재한다.
+$\alpha \in S \Rrightarrow \alpha = qd+r (0 \le r < d \because$ 나머지정리 )
+만약 $d \nmid \algha$ 일때, $r > 0$,
+$ r = \algha - qd , (\algha , d \in S)$ 
+$\algha = a_{1}x+b_{1}y , d=a_{2}x+b_{2}y$라 하면. $r=(a_{1}-a{2}q)x + (b_{1}-qb{2})y \in S $
+$0 < r < d$인 $r$에 대해 $d$가 최소라는 가정이 모순이다. $\therefore r = 0 , d \mid \algha (\forall \algha \in S)$
+$ d \mid x, d \mid y \cdots$ $d$는  $x$ , $y$의 공약수
+$\gcd(x, y)=k $라 할때, $d = akx^{''}+bky^{''}=k(ax^{''}+by^{''})$
+$k \mid d$에서 $ k = d$
+\subsection{활용}
 이미 증명되어있는 유클리드 알고리즘의 흐름을 통해서 예시로 이해 해보자.\par
 $a=273$  , $b=110$으로 하는 $\gcd(273,110)$을 구해봅시다.
 \begin{center}
