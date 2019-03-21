@@ -1,7 +1,7 @@
 
 // 도둑이 경찰을 잡으러가고있다. 일직선위에서만 움직이며 정확히 같은 위치일때만
 // 잡았다고 할수있다.
-// 경찰은 처음 위치에서 1초후 1만큼 오른쪽으로 움직이고 이 후 에는 가속이 붙어 계차수열의 등차가 1인 형태로 움직인다. 즉 시간에 따른 경찰의 위치는 
+// 경찰은 처음 위치에서 1초후 1만큼 오른쪽으로 움직이고 이 후 에는 가속이 붙어 계차수열의 등차가 1인 형태로 움직인다. 즉 시간에 따른 경찰의 위치는
 // P P+1 P+3 P+6이다.
 // 도둑은 현재 위치 S에서 S+1 S-1 2S중 하나로 이동할 수 있다.
 // 도둑과 경찰의 위치 x는  0<=x <=200,000이다.
@@ -19,12 +19,68 @@
 // 도둑은 경찰을 5초만에 잡을 수 있다.
 
 
+// #include<queue>
+// #include<iostream>
+// using namespace std;
+
+// void BFS(int police , int stealer)
+// {
+//     queue<int> Q;
+//     Q.push(stealer);
+//     int _police = police;
+//     int _time=-1;//단계별 police 추가 거리
+//     while(!Q.empty())
+//     {
+//         unsigned int number = Q.size();
+//         //_police += _time += 1; //
+//         _time += 1;
+//         _police += _time;
+
+//         for(unsigned int  i = 0 ;  i < number ; i++ )
+//         {
+//             int _stealer = Q.front();
+//             if(_stealer == _police)
+//             {
+//                 cout << _time << endl;
+//                 return ;
+//             }
+
+//             Q.pop();
+
+//             if(_stealer < 0 || _stealer > 200000 || _police < 0 || _police > 200000)
+//             {
+//                 continue;
+//             }
+
+//             Q.push(_stealer+1);
+//             Q.push(_stealer-1);
+//             Q.push(_stealer*2);
+//         }
+
+
+//     }
+//     cout << -1 << endl;
+//     return ;
+// }
+
+// int main()
+// {
+//     BFS(11 , 2);
+//     return 0;
+// }
+
+
+
 #include<queue>
 #include<iostream>
 using namespace std;
 
-void BFS(int police , int stealer)
+const int MAX = 200000;
+
+int BFS(int police, int stealer)
 {
+
+    bool visit[MAX +1] = {0};
     queue<int> Q;
     Q.push(stealer);
     int _police = police;
@@ -35,37 +91,61 @@ void BFS(int police , int stealer)
         //_police += _time += 1; //
         _time += 1;
         _police += _time;
+        if(_police < 0 || _police > MAX)
+        {
+                //cout << -1 << endl;
+                return -1;
 
+        }
         for(unsigned int  i = 0 ;  i < number ; i++ )
         {
             int _stealer = Q.front();
             if(_stealer == _police)
             {
-                cout << _time << endl;
-                return ;
+                if (_time != 0)
+                {
+                    //cout << "i , j " << police  << " "<< stealer << endl;
+                    //cout << _time << endl;
+                }
+                return _time;
             }
-
             Q.pop();
 
-            if(_stealer < 0 || _stealer > 200000 || _police < 0 || _police > 200000)
+            if(_stealer < 0 || _stealer > MAX || visit[_stealer] == true)
             {
                 continue;
             }
+
+            visit[_stealer] = true;
 
             Q.push(_stealer+1);
             Q.push(_stealer-1);
             Q.push(_stealer*2);
         }
-
-
     }
-    cout << -1 << endl;
-    return ;
+    //cout << -1 << endl;
+    return -1;
 }
 
 int main()
 {
-    BFS(11 , 2);
+    int Max = 0;
+    BFS( 11,2) ;
+    for(int i = 0 ; i < 200 ; i ++)
+    {
+        for(int j = 0 ; j < 200 ; j ++)
+        {
+            //cout << "i , j " << i << " "<< j << endl;
+            int max = BFS(i, j);
+            if( Max < max)
+            {
+                Max = max;
+            }
+
+        }
+    }
+    cout << Max << endl;
     return 0;
 }
 
+// boj1697
