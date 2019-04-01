@@ -1,5 +1,10 @@
+#include <iostream>
+#include<stdlib.h> 
+#include<stdio.h> 
+#include<array>
+#include<stack>
+#include<queue>
 
-#include "pch.h"
 using namespace std;
 int b[] = { 12,10 ,43,43 ,23,-78,123,56,45,123 ,56,56,98,45,123,56,98,41,90,24 ,45};//,-78,45,
 
