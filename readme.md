@@ -28,7 +28,7 @@ https://junbenchmarking.tistory.com/373
 
 ### class_address
 
-
+class를 상속할때 메모리 할당을 
 
 ### policer_and_stealer
 
