@@ -36,7 +36,9 @@ txt읽고 퍼센트 구하기
 
 ### binary_multiply
 
-곱셈 C,어셈 구현
+_multiply : 곱셈 C,어셈 구현
+
+divide : 정수 나눗셈  c구현 (양수일때만)
 
 ### class_address
 
