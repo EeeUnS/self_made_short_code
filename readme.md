@@ -6,9 +6,9 @@
 
 + classical
 
-- 덧셈
+  - 덧셈
 
-- 곱셈
+  - 곱셈
 
 ### pre_service_percentage
 
