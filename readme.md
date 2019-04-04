@@ -10,6 +10,10 @@
 
   - 곱셈
   
+  - 아핀
+  
+  -autokey
+  
 ### class
 
 + string
