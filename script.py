@@ -14,7 +14,7 @@ options.add_argument("disable-gpu")
 options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36')
 options.add_argument("lang=ko_KR") # 한국어!
 #lys312510@naver.com
-#dbstmd2510
+
 
 driver = webdriver.Chrome('chromedriver', chrome_options=options)
 
@@ -83,5 +83,3 @@ for title in back_title:
 print("--------------------------------------")
 
 #ranklist > tbody > tr:nth-child(1) > td:nth-child(3)
-#Ey26Fv8hj86xeUYcKMnA
-#3lIDH2BO2I
