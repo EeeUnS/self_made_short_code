@@ -71,20 +71,18 @@ void selection_sort(T a[], int num)
 ```
 
 template<typename T>
-void insertion_sort(T a[], int num)
+int sorting_insertion(T a[], int num, T item)
 {
-	for (int i = 1; i < num; i++)
-	{
-		int remember = a[i];
-		int j = i;
-		while (--j >= 0 && remember < a[j]) 
+		int j = num;
+		while (--j >= 0 && item < a[j])
 		{
 			a[j + 1] = a[j];
 		}
-		a[++j] = remember;
-	}
-	return;
+		a[++j] = item;
+
+	return num+1;
 }
+
 ```
 ### merge sort
 ```
