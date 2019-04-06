@@ -25,8 +25,8 @@ void buble_sort(T a[], int num)
 	}
 
 }
-
 ```
+
 ### selection
 
 ```
@@ -47,7 +47,45 @@ void buble_sort(T a[], int num)
 
 ```
 
+###  selection_sort
+```
+template<typename T>
+void selection_sort(T a[], int num)
+{
+	for (int i = 0; i < num - 1; i++)
+	{
+		int Minindex = i;
+		for (int j =  i + 1 ; j < num ; j++)
+		{
+			if (a[j] < a[Minindex])
+			{
+				Minindex = j;
+			}
+		}
+		swap(a[Minindex], a[i]);
+	}
+	return ;
+}
+```
+실제 삽입을 했을때,
+```
 
+template<typename T>
+void insertion_sort(T a[], int num)
+{
+	for (int i = 1; i < num; i++)
+	{
+		int remember = a[i];
+		int j = i;
+		while (--j >= 0 && remember < a[j]) 
+		{
+			a[j + 1] = a[j];
+		}
+		a[++j] = remember;
+	}
+	return;
+}
+```
 ### merge sort
 ```
 template<typename T>
@@ -96,7 +134,7 @@ void mergesort(T a[], int low, int high)
 		}
 	}
 }
-```
+``` 
 
 ### quick sort
 
