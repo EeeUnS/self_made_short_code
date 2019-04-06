@@ -38,6 +38,11 @@ txt읽고 퍼센트 구하기
 
 + merge
 
++ bubble
+
++ insertion
+
++ selection
 ### binary_multiply
 
 _multiply : 곱셈 C,어셈 구현
