@@ -1,6 +1,8 @@
 #ifndef VECTOR__H
 #define VECTOR__H
 
+namespace euns
+{
 template<typename T>
 struct Node
 {
@@ -13,7 +15,7 @@ template<typename T>
 class stack
 {
 public:
-	stack(const stack<T> &b); //iteratorÇÊ¿ä ¹Ì±¸Çö
+	stack(const stack<T> &b); //iteratoréž˜å¤¸ å›ºå¤‡æ³…
 	stack();
 	stack(const T &item);
 	~stack();
@@ -27,8 +29,8 @@ private:
 	Node<T>* end;
 public:
 	void swap(stack<T>& b);
-	bool operator== (const stack<T>& rhs); //iteratorÇÊ¿ä ¹Ì±¸Çö
-	bool operator!= (const stack<T>& rhs);//iteratorÇÊ¿ä ¹Ì±¸Çö
+	bool operator== (const stack<T>& rhs); //iteratoréž˜å¤¸ å›ºå¤‡æ³…
+	bool operator!= (const stack<T>& rhs);//iteratoréž˜å¤¸ å›ºå¤‡æ³…
 	bool operator< (const stack<T>& rhs);
 	bool operator<= (const stack<T>& rhs);
 	bool operator> (const stack<T>& rhs);
@@ -55,6 +57,6 @@ public:
 //
 //template <class T, class Container>
 //bool operator>= (const stack<T, Container>& lhs, const stack<T, Container>& rhs);
-
+}
 
 #endif // !1
