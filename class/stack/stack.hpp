@@ -3,11 +3,14 @@
 #define VECTOR__HPP
 #include "stack.h"
 
+namespace euns
+{
+
 template<typename T>
 stack<T>::stack(): size_type(0), end(nullptr)
 {}
 
-//template<typename t> //ÇØ°á¸øÇÏ°ÚÀ½
+//template<typename t> //í•´ê²°ëª»í•˜ê² ìŒ
 //stack<t>::stack(const stack<t> &b) 
 //{
 //	size_type = 0;
@@ -15,7 +18,7 @@ stack<T>::stack(): size_type(0), end(nullptr)
 //	{
 //		end = nullptr;
 //	}
-//	else//iteratorÇÊ¿äÇÔ
+//	else//iteratorí•„ìš”í•¨
 //	{
 //		T *a = new T[b.size()];
 //		while
@@ -122,12 +125,12 @@ void stack<T>::swap(stack<T>& b)
 	this->size_type = c_size;
 }
 
-//template<typename T> //iteratorÇÊ¿ä
+//template<typename T> //iteratorí•„ìš”
 //bool stack<T>::operator== (const stack<T>& rhs)
 //{
 //
 //}
-//template<typename T>//iteratorÇÊ¿ä
+//template<typename T>//iteratorí•„ìš”
 //bool stack<T>::operator!= (const stack<T>& rhs)
 //{
 //
@@ -157,4 +160,5 @@ bool stack<T>::operator>= (const stack<T>& rhs)
 	return this->size() >= rhs.size();
 }
 
+}
 #endif // !1
