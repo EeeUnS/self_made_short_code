@@ -9,6 +9,7 @@ swap 함수는 다음 라이브러리에 있습니다.
 
 
 ### bubble 
+모든 값은 비교해서 스왑한다.
 ```
 template<typename T>
 void buble_sort(T a[], int num)
@@ -28,6 +29,7 @@ void buble_sort(T a[], int num)
 ```
 
 ###  selection_sort
+가장작은 값을 찾아서 맨밑으로 넣는다
 ```
 template<typename T>
 void selection_sort(T a[], int num)
@@ -49,6 +51,8 @@ void selection_sort(T a[], int num)
 
 ```
 ### insertion_sort
+
+삽입정렬, 뒤의 값을 밀어내고 값을 넣는다
 ```
 
 template<typename T>
