@@ -27,26 +27,6 @@ void buble_sort(T a[], int num)
 }
 ```
 
-### selection
-
-```
-template<typename T>
-void buble_sort(T a[], int num)
-{
-	for (int i = 0; i < num -1; i++)
-	{
-		for (int j = 0; j < num - i -1; j++)
-		{
-			if (a[j] > a[j + 1])
-			{
-				swap(a[j], a[j + 1]);
-			}
-		}
-	}
-}
-
-```
-
 ###  selection_sort
 ```
 template<typename T>
@@ -66,6 +46,27 @@ void selection_sort(T a[], int num)
 	}
 	return ;
 }
+
+```
+### insertion_sort
+```
+
+template<typename T>
+void insertion_sort(T a[], int num)
+{
+    for (int i = 1 ; i < num ; i++ )
+    {
+        int item = a[i];
+        int j = i ;
+        while (--j >= 0 && item < a[j])
+        {
+            a[j + 1] = a[j];
+        }
+        a[++j] = item;
+    }
+
+}
+
 ```
 실제 삽입을 했을때,
 ```
