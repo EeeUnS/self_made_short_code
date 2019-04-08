@@ -60,7 +60,7 @@ void insertion_sort(T a[], int num)
 {
     for (int i = 1 ; i < num ; i++ )
     {
-        int item = a[i];
+        T item = a[i];
         int j = i ;
         while (--j >= 0 && item < a[j])
         {
