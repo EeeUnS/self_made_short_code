@@ -12,11 +12,23 @@
   
   - 아핀
   
-  -autokey
+  - autokey
+  
+  - playfair
+  
+  - rail fence
   
 ### class
 
 + string
+
++ stack
+
++ queue
+
++ vector 
+
++ deque
 
 ### pre_service_percentage
 
@@ -43,6 +55,8 @@ txt읽고 퍼센트 구하기
 + insertion
 
 + selection
+
++ shell
 ### binary_multiply
 
 _multiply : 곱셈 C,어셈 구현
