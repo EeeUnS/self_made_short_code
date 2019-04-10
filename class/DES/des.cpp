@@ -130,7 +130,7 @@ static const int ShiftTable[16] =
 2,2,2,1}
 ///////////////////////////////////////////////////////////////////////////
 
-void Cipher (int plainBlock[64], int RoundKeys[16, 48], int cipherBlock[64])
+void Cipher (int plainBlock[], int RoundKeys[][], int cipherBlock[])//64 RoundKeyssms 16  48 / 64
 {
     int leftBlock[32] ,rightBlock[32];
     int inBlock[64];
@@ -141,7 +141,7 @@ void Cipher (int plainBlock[64], int RoundKeys[16, 48], int cipherBlock[64])
 
     for (int round = 1 ; round <= 16; round++)
     {
-        mixer (leftBlock, rightBlock, RoundKeys[round]);
+        mixer (leftBlock, rightBlock, &RoundKeys[round-1]);
         if(round != 16)
             swapper (leftBlock, rightBlock);
         }
@@ -153,25 +153,28 @@ void Cipher (int plainBlock[64], int RoundKeys[16, 48], int cipherBlock[64])
 }
 
 
-void mixer (leftBlock[48], rightBlock[48], RoundKey[48])
+static void mixer (int leftBlock[],int  rightBlock[],int  RoundKey[])//48 48 48
 {
+    int T[32],T2[32],T3[32];
     copy (32, rightBlock, T1);
     function (T1, RoundKey,T2);
     exclusiveOr (32, leftBlock, T2, T3);
-    copy (32, T3, rightBlock);
+    copy (32, T3, leftBlock);
 }
 
 
-void swapper (leftBlock[32], rigthBlock[32])
+static void swapper(int leftBlock[],int  rigthBlock[]) //32 32
 {
+    int T[32];
     copy(32, leftBlock, T);
     copy(32, rightBlock, leftBlock);
     copy(32, T,  rightBlock);
 }
 
 
-void function (inBlock[32], RoundKey[48], outBlock[32])
+static void function (inBlock[32], RoundKey[48], outBlock[32])
 {
+    int T[32],T2[32],T3[32];
     permute (32, 48, inBlock, T1, ExpansionPermutationTable);
     exclusiveOr (48, T1, RoundKey,T2);  
     substitute (T2, T3, SubstituteTables);
@@ -179,25 +182,25 @@ void function (inBlock[32], RoundKey[48], outBlock[32])
 }
 
 
-void substitute (inBlock[32], outBlock[48], SubstitutionTables[8, 4, 16])
+static void substitute (int inBlock[],int  outBlock[],int  SubstitutionTables[][][]) //48 / 48  /8 4 16
 {
     for (int i = 0 ; i <  8 ; i++)
     {
-        row  = 2  inBlock[i 6 + 1] + inBlock [i * 6 + 6];
-        col  = 8 * inBlock[i * 6 + 2] + 4 * inBlock[i * 6 + 3] +2*inBlock[i * 6 + 4] + inBlock[i*6 + 5];
-        value    =    SubstitutionTables[i][row][col];
-        outBlock[i * 4 + 1]  = value / 8;
+        int row  = 2 * inBlock[i * 6 + 0] + inBlock [i * 6 + 5];
+        int col  = 8 * inBlock[i * 6 + 1] + 4 * inBlock[i * 6 + 2] +2*inBlock[i * 6 + 3] + inBlock[i*6 + 4];
+        int value = SubstitutionTables[i][row][col];
+        outBlock[i * 4 + 0]  = value / 8;
         value = value % 8;
-        outBlock[i* 4 + 2]  = value / 4;
+        outBlock[i* 4 + 1]  = value / 4;
         value  = value % 4;
-        outBlock[i*4 + 3] = value % 2;
+        outBlock[i*4 + 2] = value % 2;
         value = value %2;
-        outBloc[i*4 + 4] = value;
+        outBloc[i*4 + 3] = value;
     }
 }
 
 
-void split (int com_num, int spl_num, int  inBlock[], int leftBlock[],int rightBlock[]) //inblock을 왼 오 로 나눈다.
+static void split (int com_num, int spl_num, int  inBlock[], int leftBlock[],int rightBlock[]) //inblock을 왼 오 로 나눈다.
 {
     for(int i = 0 ; i < spl_num ; i++ )
     {
@@ -206,7 +209,7 @@ void split (int com_num, int spl_num, int  inBlock[], int leftBlock[],int rightB
     }
 }
 
-void permute(int first_Block_num, int final_Block_num, int firstBlock[], int finalBlock[], int Table[])
+static void permute(int first_Block_num, int final_Block_num, int firstBlock[], int finalBlock[], int Table[])
 {
     for(int i = 0 ; i < final_Block_num ; i++)
     {
@@ -214,7 +217,7 @@ void permute(int first_Block_num, int final_Block_num, int firstBlock[], int fin
     }
 }
 
-void combine (int spl_num, int com_num,int leftBlock[],int rightBlock,int outBlock[])
+static void combine (int spl_num, int com_num,int leftBlock[],int rightBlock,int outBlock[])
 {
       for(int i = 0 ; i < spl_num ; i++ )
     {
@@ -223,7 +226,7 @@ void combine (int spl_num, int com_num,int leftBlock[],int rightBlock,int outBlo
     }
 }
 
-void copy(int num ,int rightBlock[],int T1[])
+static void copy(int num ,int rightBlock[],int T1[])
 {
     for(int i = 0 ; i < num ; i++)
     {
@@ -231,7 +234,7 @@ void copy(int num ,int rightBlock[],int T1[])
     }
 }
 
-void exclusiveOr (int num,int T1[],int RoundKey[],int T2[]) //T1과 rountdey를 xor해서 T2에 저장한다.
+static void exclusiveOr (int num,int T1[],int RoundKey[],int T2[]) //T1과 rountdey를 xor해서 T2에 저장한다.
 {
     for(int i = 0 ; i < num ; i++)
     {
@@ -239,14 +242,13 @@ void exclusiveOr (int num,int T1[],int RoundKey[],int T2[]) //T1과 rountdey를 
     }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //키생성
-void Key_Generator(int keyWithParities[],int RoundKeys[16, 48],int ShiftTable[])
+void Key_Generator(int keyWithParities[],int RoundKeys[][],int ShiftTable[])//roundkey는 16 48
 {
     permute(64, 56, keyWithParities, cipherKey, ParityDropTable); //축소 P박스 
     split(56, 28, cipherKey, leftKey, rightKey);
-    for (int round = 0 ;round < 16; i++)
+    for (int round = 0; round < 16; i++)
     {
         shiftLeft(leftKey,ShiftTable[round]);
         shiftLeft(rightKey,ShiftTable[round]);
@@ -255,18 +257,41 @@ void Key_Generator(int keyWithParities[],int RoundKeys[16, 48],int ShiftTable[])
     }
 }
 
-void shiftLeft(int block[28], int numOfShifts)
+static void shiftLeft(int block[], int numOfShifts)
 {
-    for (int i = 1 ; i <= numOfShifts; i++)
+    for (int i = 0 ; i < numOfShifts; i++)
     {
-        T = block[1];
-        for (int j = 2  ;j<= 28 ; j++)
+        int T = block[0];
+        for (int j = 1  ; j < 28 ; j++)
         {
             block[j−1] = block[j];
         }
-        block[28] = T;
+        block[27] = T;
     }
 
 }
 
 ///////////////////////////////////////////////////////////
+
+void Decrpytion(int plainBlock[], int RoundKeys[][], int cipherBlock[])//64 RoundKeyssms 16  48 / 64
+{
+    int leftBlock[32] ,rightBlock[32];
+    int inBlock[64];
+
+    permute(64, 64, plainBlock, inBlock, InitialPermutationTable); //plainblock이 pbox를 통해서 inblock 으로 옮긴다 
+
+    split (64, 32, inBlock, leftBlock, rightBlock);
+
+    for (int round = 16 ; round >  0; round--)
+    {
+        mixer (leftBlock, rightBlock, &RoundKeys[round-1]);
+        if(round != 16)
+            swapper (leftBlock, rightBlock);
+        }
+
+    combine (32, 64, leftBlock, rightBlock, outBlock);
+
+    permute(64, 64, outBlock, cipherBlock, FinalPermutationTable);
+
+}
+
