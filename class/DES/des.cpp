@@ -243,7 +243,7 @@ void swapper(int leftBlock[], int  rigthBlock[]) //32 32
 
 void function(int inBlock[], int RoundKey[], int outBlock[])// 32 48,  32
 {
-	int T1[32] = {0,}, T2[32] = { 0, }, T3[32] = { 0, };
+	int T1[48] = {0,}, T2[48] = { 0, }, T3[48] = { 0, };
 	permute(32, 48, inBlock, T1, ExpansionPermutationTable);
 	exclusiveOr(48, T1, RoundKey, T2);
 	substitute(T2, T3, SubstituteTables);
