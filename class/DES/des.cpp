@@ -375,15 +375,9 @@ using namespace euns ;
 
 int main()
 {
-	for (int i = 0; i < 16; i++)
-	{
-		for (int j = 0; j < 48; j++)
-		{
-			roundkeys[i][j] = 1;
-		}
-	}
-	bitset<64> key;
-	//key_generator(key, roundkeys, shifttable);
+
+	bitset<64> key(0xAABB09182736CCDD);//0xAABB09182736CCDD
+	key_generator(key, roundkeys, shifttable);
 	bitset<64> plainblock;
 
 	bitset<64>  cipherblock;
