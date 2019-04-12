@@ -1,6 +1,44 @@
-#pragma once
+
+#ifndef DES__H__
+#define DES__H__
+
+/*
+
+		DES();
+		
+		DES(bitset<64>keywithparities)
+		key값을 넣어준 값으로 설정한후 라운드 키를 생성합니다
+
+		~DES();
+		
+		void key_generator(bitset<64>& keywithparities)
+		void key_generator(uint64_t  keywithparities)
+		생성자에서 key값을 설정하지못하거나 재설정할때 사용합니다.
+		key값을 넣어준 값으로 설정한후 라운드 키를 생성합니다
+
+		void cipher(const uint64_t &plainblock, uint64_t &cipherblock)
+		void cipher(const bitset<64>& plainblock, bitset<64>& cipherblock)
+
+		plainblock으로 넣고 암호화 된값이 cipherblock으로 들어갑니다
 
 
+		void decrpytion(uint64_t &plainblock, const uint64_t &cipherblock)
+		void decrpytion(bitset<64>& plainblock, const bitset<64>& cipherblock)
+
+		cipherblock으로 들어간 암호문을 복호화하여 plainblock에 저장합니다
+		
+		
+
+		key_value_ull()
+		return key unsighed long long
+		
+		key_value_bit()
+		return key bitset<64>
+
+		key_value_string()
+		return key string
+
+*/
 #include<string>
 #include<bitset>
 
@@ -13,14 +51,15 @@ namespace euns
 	public:
 		DES();
 		DES(bitset<64>keywithparities);
+		DES(uint64_t keywithparities);
 		~DES();
-		void decrpytion(bitset<64>& plasinblock, const bitset<64>& cipherblock); //64 RoundKeyssms 16  48 / 64
+		void decrpytion(bitset<64>& plainblock, const bitset<64>& cipherblock); //64 RoundKeyssms 16  48 / 64
 		void key_generator(bitset<64>& keywithparities); //const int shifttable[] = shifttables, bitset<48> roundkey[] = RoundKeys);//roundkey는 16 48
 		void cipher(const bitset<64>& plainblock, bitset<64>& cipherblock);//64 RoundKeyssms 16  48 / 64
 
-		void decrpytion(uint64_t plainblock, const uint64_t cipherblock); //64 RoundKeyssms 16  48 / 64
-		void key_generator(uint64_t  keywithparities); //const int shifttable[] = shifttables, bitset<48> roundkey[] = RoundKeys);//roundkey는 16 48
-		void cipher(const uint64_t plainblock, uint64_t cipherblock);//64 RoundKeyssms 16  48 / 64
+		void decrpytion(uint64_t &plainblock, const uint64_t &cipherblock); //64 RoundKeyssms 16  48 / 64
+		void key_generator(uint64_t &keywithparities); //const int shifttable[] = shifttables, bitset<48> roundkey[] = RoundKeys);//roundkey는 16 48
+		void cipher(const uint64_t &plainblock, uint64_t &cipherblock);//64 RoundKeyssms 16  48 / 64
 
 		long long key_value_ull();
 		bitset<64> key_value_bit();
@@ -187,18 +226,6 @@ namespace euns
 			2,2,2,1
 		};
 	};
-
-
-	/////////////////////////////////////////////////////////////////////////
-
-	/*
-	요구사항 :
-	long값이 들어올때 비트셋으로 바꿔준다.
-	stirng으로 값이 들어올때 비트셋으로 바꿔준다
-	1. 암호화할 값이 들어온다. -> 암호화된 값을 리턴한다
-	2. 암호화된 값이 들어온다. -> 복호화된 값을 리턴한다.
-	최종적으로는
-	*/
 
 
 	void DES::cipher(const bitset<64>& plainblock, bitset<64>& cipherblock)//64 RoundKeyssms 16  48 / 64
@@ -409,9 +436,12 @@ namespace euns
 	{
 
 	}
+	DES::DES(uint64_t keywithparities)
+	{
 
+	}
 
-	void DES::decrpytion(uint64_t plainblock, const uint64_t cipherblock) //64 RoundKeyssms 16  48 / 64
+	void DES::decrpytion(uint64_t &plainblock, const uint64_t &cipherblock) //64 RoundKeyssms 16  48 / 64
 	{
 		const bitset<64> _cipherblock = cipherblock;
 		bitset<64> _plainblock = plainblock;
@@ -439,7 +469,7 @@ namespace euns
 
 
 
-	void DES::key_generator(uint64_t  keywithparities) //const int shifttable[] = shifttables, bitset<48> roundkey[] = RoundKeys);//roundkey는 16 48
+	void DES::key_generator(uint64_t &keywithparities) //const int shifttable[] = shifttables, bitset<48> roundkey[] = RoundKeys);//roundkey는 16 48
 	{
 		keywithparity = keywithparities;
 
@@ -459,10 +489,7 @@ namespace euns
 		}
 	}
 
-
-
-	
-	void DES::cipher(const uint64_t plainblock, uint64_t cipherblock)//64 RoundKeyssms 16  48 / 64
+	void DES::cipher(const uint64_t &plainblock, uint64_t &cipherblock)//64 RoundKeyssms 16  48 / 64
 	{
 		bitset<64> _cipherblock = cipherblock;
 		const bitset<64> _plainblock = plainblock;
@@ -494,3 +521,4 @@ namespace euns
 	}
 	
 }
+#endif
