@@ -1,111 +1,91 @@
-#include  <stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#pragma warning(disable:4996)
 
-#define q  3  
-#define p 11
-//Å°¸¦ ¹Ù²Ù°í½Í´Ù¸é ¿©±â¿¡ µé¾î°¡´Â p,q¸¦ ´Ù¸¥ ¼Ò¼ö·Î ¹Ù²Ù¸éµÈ´Ù
-/*
-	This is RSA
-
-	¼Û½ÅÀÚ bobÀº n, e¸¦ ¾È´Ù °ø°³Å°
-	¼ö½ÅÀÚ alice´Â n d¸¦ ¾È´Ù  privet key
-*/
-
-int n = p * q;
-int phin = (q - 1)*(p - 1);
-
-int create_public_key();// return e
-int gcd(int a, int d);
-
-int extended_Euclid_for_multiple_inverse(int n, int a); 
-/*
-	create_personal_key return d
-	Å«°ªÀÌ µÚ¿¡ÀÕ¾î¾ßÇÑ´Ù ¾È±×·¯¸é ¿ª¿øÁ¦´ë·Î ¾È³ª¿È
-*/
-int exponentMod(int a, int d, int N);
-//encryption and decryption
-
-int main()
-{
-	char array[10] = { 28,27,0,26,27,0,2,27,7 ,14 };
-	int e = 7; //create_public_key(); //public key
-	int private_key = extended_Euclid_for_multiple_inverse(e , phin);
-	
-	for (int i = 0; i < 10; i++)
-	{ 
-		if(exponentMod(array[i], private_key, n) == 0)
-			printf(" \n");
-		else
-		{
-			printf("%c\n", exponentMod(array[i], private_key, n) + 'a' - 1);
-		}
-	}
-	system("pause");
-	return 0;
-}
-
-int create_public_key()
-{
-	int e = 2;
-	while (e < phin)
-	{
-		if (gcd(e, phin) == 1)
-			break;
-		else
-			e++;
-	}
-	return e;
-}
-
-
-int gcd(int a, int b)
+//ì •ìˆ˜ë¡  ë¼ì´ë¸ŒëŸ¬ë¦¬ 1.
+//ëª¨ë“ˆëŸ¬ ê³±ì…ˆì—­ V
+//ì»´ë¹„ë„¤ì´ì…˜
+//í¼ë®¤í…Œì´ì…˜
+//ì§€ìˆ˜ìŠ¹ / mod v
+//gcd v
+//lcm v
+//
+unsigned long long int gcd(const unsigned long long int a, const unsigned long long int b)
 {
 	if (b == 0)
 		return a;
 	else
-		gcd(b, a%b);
+		return gcd(b, a % b);
 }
 
-int extended_Euclid_for_multiple_inverse(int n,int a)
+unsigned long long int lcm(const unsigned long long int a, const unsigned long long int b)
 {
-	if (gcd(a, n) != 1)
-		return 0;
-	int r1 = a, r2 = n;
-	int t1 = 0, t2 = 1;
-	int u , r, t;
-	while (r2>0)
+	return (a / gcd(a, b)) * b ;
+}
+
+unsigned long long int extended_Euclid_for_multiple_inverse(const unsigned long long int a, const unsigned  long long int mod_n)
+{
+	if (gcd(a, mod_n) != 1)
+		return -1;
+	unsigned long long r1 = a, r2 = mod_n;
+	long long t1 = 0, t2 = 1;
+	unsigned long long u, r, t;
+	while (r2 > 0)
 	{
 		u = r1 / r2;
 
-		r = r1%r2;
+		r = r1 % r2;
 		r1 = r2; r2 = r;
 
 		t = t1 - u * t2;
 		t1 = t2; t2 = t;
 	}
 	if (t1 < 0)
-		t1 += n;
+		t1 += mod_n;
 
 	return t1;  //e
 }
 
-int exponentMod(int a, int d, int N)
+unsigned long long int Fibonacci(const unsigned long long int n, const unsigned long long int k) //made fuction stack
+{
+	if (k == n) return 1;
+	else if (k == 1) return n;
+	else return (Fibonacci(n - 1, k - 1) + Fibonacci(n - 1, k)) % 1000000007;
+}
+
+unsigned long long int exponent_Mod(const unsigned long long int base, const unsigned long long int exponent, const unsigned long long int mod_N)
 //encryption and decryption
 {
-	if (a == 0)
+	if (base == 0)
 		return 0;
-	if (d == 0)
+	if (exponent == 0)
 		return 1;
-	long y;
-	if (d % 2 == 0) {
-		y = exponentMod(a, d / 2, N);
-		y = (y * y) % N;
+	unsigned long long int y;
+
+	if (exponent % 2 == 0) {
+		y = exponent_Mod(base, exponent / 2, mod_N);
+		y = (y * y) % mod_N;
 	}
 	else {
-		y = a % N;
-		y = (y * exponentMod(a, d - 1, N) % N) % N;
+		y = base % mod_N;
+		y = (y * exponent_Mod(base, exponent - 1, mod_N) % mod_N) % mod_N;
 	}
-	return (int)((y + N) % N);
+	return ((y + mod_N) % mod_N);
+}
+
+
+unsigned long long int exponent(const unsigned long long int base, const unsigned long long int power)
+{
+	if (base == 0)
+		return 0;
+	if (exponent == 0)
+		return 1;
+	unsigned long long int y;
+
+	if (power % 2 == 0) {
+		y = exponent(base, power / 2 );
+		y = (y * y) ;
+	}
+	else {
+		y = base;
+		y = y * exponent(base, power - 1);
+	}
+	return y ;
 }
