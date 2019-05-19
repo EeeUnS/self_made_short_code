@@ -117,8 +117,8 @@ void shell_sort(T a[], int num)
 ### HEAP SORT
 parent는 실제로 사용하지는 않음
 실제 과정은 MAX_HEAPIFY와HEAPSORT 두개로 나타낼수있음
-'''
 
+'''
 int parent(int i)
 {
 	return i / 2;
