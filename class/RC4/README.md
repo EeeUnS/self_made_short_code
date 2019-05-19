@@ -1,3 +1,4 @@
+pseudo_code
 ```
 
 RC4_Encryption(K)
