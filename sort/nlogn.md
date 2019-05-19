@@ -182,3 +182,21 @@ void HEAPSORT(int A[], int size)
 	}
 }
 ```
+
+### COUNTING SORT
+persude code
+```
+COUNTING-SORT.A;B; k/
+1 letCOE0: : k be a new array
+2 for i D 0 to k
+3 COEi D 0
+4 for j D 1 to A:length
+5 COEAOEj  D COEAOEj  C 1
+6 // COEi now contains the number of elements equal to i .
+7 for i D 1 to k
+8 COEi D COEi C COEi  1
+9 // COEi now contains the number of elements less than or equal to i .
+10 for j D A:length downto 1
+11 BOEC OEAOEj  D AOEj 
+12 COEAOEj  D COEAOEj   1
+```
