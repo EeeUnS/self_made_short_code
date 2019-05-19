@@ -170,10 +170,10 @@ void BUILD_MAX_HEAP(int A[], int n) //전체 배열을 힙트리로 나타내기
 
 void HEAPSORT(int A[], int size)
 {
-	int* B = A - 1;
+	int* B = A - 1;//C에 맞게 인덱스값을 하나씩 내린다
 	BUILD_MAX_HEAP(B, size);
 	int heapsize = size;
-	for (int i = size; i > 0; i--) //C에 맞게 인덱스값을 하나씩 내린다
+	for (int i = size; i > 0; i--) 
 	{
 		swap(B[1], B[i]);
 		heapsize--;
