@@ -1,7 +1,10 @@
 
 
 ### merge sort
+
 ```
+#include<queue>
+
 template<typename T>
 void mergesort(T a[], int low, int high)
 {
