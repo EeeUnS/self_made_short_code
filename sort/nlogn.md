@@ -118,7 +118,7 @@ void shell_sort(T a[], int num)
 parent는 실제로 사용하지는 않음
 실제 과정은 MAX_HEAPIFY와HEAPSORT 두개로 나타낼수있음
 
-'''
+```
 int parent(int i)
 {
 	return i / 2;
@@ -171,7 +171,6 @@ void BUILD_MAX_HEAP(int A[], int n) //전체 배열을 힙트리로 나타내기
 void HEAPSORT(int A[], int size)
 {
 	int* B = A - 1;
-
 	BUILD_MAX_HEAP(B, size);
 	int heapsize = size;
 	for (int i = size; i > 0; i--) //C에 맞게 인덱스값을 하나씩 내린다
@@ -182,4 +181,4 @@ void HEAPSORT(int A[], int size)
 
 	}
 }
-'''
+```
