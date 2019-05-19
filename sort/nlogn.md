@@ -113,3 +113,73 @@ void shell_sort(T a[], int num)
 }
 
 ```
+
+### HEAP SORT
+parent는 실제로 사용하지는 않음
+실제 과정은 MAX_HEAPIFY와HEAPSORT 두개로 나타낼수있음
+'''
+
+int parent(int i)
+{
+	return i / 2;
+}
+
+int left(int i)
+{
+	return 2 * i;
+}
+
+
+int right(int i)
+{
+	return 2 * i + 1;
+}
+
+void MAX_HEAPIFY(int A[], int i, int heapsize) //I인덱스의 노드가 자식 노드보다 작을 때 이를 밑으로 내려 힙트리 구조를 만든다 
+{
+	int l = left(i);
+	int r = right(i);
+	int largest;
+	if (l <= heapsize && A[l] > A[i])
+	{
+		largest = l;
+	}
+	else
+	{
+		largest = i;
+	}
+	if (r <= heapsize && A[r] > A[largest])
+	{
+		largest = r;
+	}
+	if (largest != i)
+	{
+		swap(A[i], A[largest]);
+		MAX_HEAPIFY(A, largest, heapsize);
+	}
+}
+
+void BUILD_MAX_HEAP(int A[], int n) //전체 배열을 힙트리로 나타내기 위한 함수
+{
+	int heapsize = n;
+	for (int i = n / 2; i >= 1; i--)
+	{
+		MAX_HEAPIFY(A, i, heapsize);
+	}
+}
+
+void HEAPSORT(int A[], int size)
+{
+	int* B = A - 1;
+
+	BUILD_MAX_HEAP(B, size);
+	int heapsize = size;
+	for (int i = size; i > 0; i--) //C에 맞게 인덱스값을 하나씩 내린다
+	{
+		swap(B[1], B[i]);
+		heapsize--;
+		MAX_HEAPIFY(B, 1, heapsize);
+
+	}
+}
+'''
