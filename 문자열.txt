@@ -14,15 +14,15 @@ https://ko.wikipedia.org/wiki/%ED%99%95%EC%9E%A5_%EC%9C%A0%EB%8B%89%EC%8A%A4_%EC
 https://ko.wikipedia.org/wiki/EUC-KR
 
 https://ko.wikipedia.org/wiki/%EA%B0%80%EB%B3%80_%EB%84%88%EB%B9%84_%EC%9D%B8%EC%BD%94%EB%94%A9
-´ëÄ¡¹®ÀÚ
+ëŒ€ì¹˜ë¬¸ì
 https://ko.wikipedia.org/wiki/%EB%8C%80%EC%B9%98_%EB%AC%B8%EC%9E%90
 
-ï¿½ï¿½
+å ì™ì˜™
 https://namu.wiki/w/%E5%8D%A0%EC%8F%99%EC%98%99
 
-C ¹®ÀÚ¿­ Ã³¸®
+C ë¬¸ìì—´ ì²˜ë¦¬
 https://ko.wikipedia.org/wiki/C_%EB%AC%B8%EC%9E%90%EC%97%B4_%EC%B2%98%EB%A6%AC
-°¡º¯³Îºñ ÀÎÄÚµù
+ê°€ë³€ë„ë¹„ ì¸ì½”ë”©
 https://ko.wikipedia.org/wiki/%EA%B0%80%EB%B3%80_%EB%84%88%EB%B9%84_%EC%9D%B8%EC%BD%94%EB%94%A9
 
 wchar.h
@@ -72,4 +72,4 @@ https://blog.naver.com/wondo21c/30043174174
 
 
 
-
+1as
