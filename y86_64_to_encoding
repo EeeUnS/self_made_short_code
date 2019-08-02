@@ -206,7 +206,7 @@ char* Label[20][20];
 
 void insrtruction_to_encoding();
 void input_error();
-void little_entry();
+uint64_t little_endian(uint64_t integer);
 void Print_Encoding_Instruction(int number);
 int find_reg(char reg[]);
 void reg_in();
@@ -227,7 +227,7 @@ void insrtruction_to_encoding()
 {
 	char __instruction[10] = { 0, };
 	const int buffer = 10;
-	scanf_s("%s", __instruction,sizeof(__instruction));
+	scanf_s("%s", __instruction, sizeof(__instruction));
 
 	int ins_len = strlen(__instruction);
 	//__instruction[ins_len - 1] = '\0';
@@ -241,7 +241,7 @@ void insrtruction_to_encoding()
 			break;
 		}
 	}
-	printf("0x%X: ",address);
+	printf("0x%X: ", address);
 	switch (index)
 	{
 	case halt:
@@ -251,7 +251,7 @@ void insrtruction_to_encoding()
 		printf("\n");
 		address += 1;
 		break;
-	//20
+		//20
 	case rrmovq:
 	case cmovle:
 	case cmovl:
@@ -259,7 +259,7 @@ void insrtruction_to_encoding()
 	case cmovne:
 	case cmovge:
 	case cmovg:
-	//60
+		//60
 	case addq:
 	case subq:
 	case andq:
@@ -270,26 +270,27 @@ void insrtruction_to_encoding()
 		printf("\n");
 		address += 2;
 		break;
-	//30
+		//30
 	case irmovq:
-		Print_Encoding_Instruction(index);
+	{Print_Encoding_Instruction(index);
 		printf("F");
 
-
-		
+		uint64_t D = 0;
+		scanf_s("%" PRIx64, &D);
+		D =little_endian(D);
 		reg_in();
-
+		printf("%" PRIX64 "\n", D);
 		address += 10;
 		break;
-		//40
+	}	//40
 	case rmmovq:
 	{	Print_Encoding_Instruction(index);
-	reg_in(); //rA
-	uint64_t D = 0;
-	scanf_s("%" PRIx64, &D);
-	printf("%" PRIx64 , D);
-	address += 10;
-	break;
+		reg_in(); //rA
+		uint64_t D = 0;
+		scanf_s("%" PRIx64, &D);
+		printf("%" PRIx64, D);
+		address += 10;
+		break;
 	}
 	case mrmovq:
 		Print_Encoding_Instruction(index);
@@ -299,7 +300,7 @@ void insrtruction_to_encoding()
 
 		address += 10;
 		break;
-	//70
+		//70
 	case jmp:
 	case jle:
 	case jl:
@@ -307,7 +308,7 @@ void insrtruction_to_encoding()
 	case jne:
 	case jge:
 	case jg:
-	//80
+		//80
 	case call:
 		//주소값을 저장해서 출력해야됨 씹헬
 		Print_Encoding_Instruction(index);
@@ -333,10 +334,20 @@ void input_error()
 	exit(-1);
 	return;
 }
-
-void little_entry()
+//irmovq 0x12345678 %rdi
+uint64_t little_endian(uint64_t integer)
 {
+	uint64_t num = integer;
+	uint64_t intreturn = 0;
+	uint64_t a = 0xFF;
 
+	for (int i = 0; i < 4; i++)
+	{
+		intreturn = intreturn << 8;
+		intreturn += num & a;
+		num = num >> 8;
+	}
+	return intreturn;
 }
 
 void Print_Encoding_Instruction(int number)
@@ -354,9 +365,9 @@ void Print_Encoding_Instruction(int number)
 int find_reg(char _reg[])
 {
 	int index = 0;
-	for (;index <= 16; index++)
+	for (; index <= 16; index++)
 	{
-		if(strcmp(_reg, reg[index ]) ==0)
+		if (strcmp(_reg, reg[index]) == 0)
 		{
 			return index;
 		}
@@ -368,18 +379,18 @@ int find_reg(char _reg[])
 void reg_in() //한개로 생각하고 둘다 처리하자! 쉼표떼기 + 공백처리 오류 젤나기쉬운곳
 {
 	char line[10] = { 0, }; //라인을 읽어서 순수 reg만 추출해 _reg에 넣는다.
-	char _reg[10] = {0,};
+	char _reg[10] = { 0, };
 
 	scanf_s("%s", line, 10);
-	
+
 	int line_i = 0;
 	// 1 쉼표만 읽은경우 , 2 쉼표 포함해서 레지를 읽을 경우  
 	//3. 레지뒤의 주석을 읽은 경우. 4. 맨뒤에 쉼표가 들어간경우.
-	if (line[0] == ',' && line[1] == '\0' )
+	if (line[0] == ',' && line[1] == '\0')
 	{
 		scanf_s("%s", line, 10);
 	}
-	
+
 	if (line[0] == ',' && line[1] == '\0')
 	{
 		input_error();
@@ -389,12 +400,12 @@ void reg_in() //한개로 생각하고 둘다 처리하자! 쉼표떼기 + 공�
 	{
 		line_i++;
 	}
-	
-	int reg_index = 0 ;//입력이 제대로 되지않을시 에러
-	for(;(!isspace(line[line_i])) && (line[line_i] != '#') && (line[line_i] != ',') && (line[line_i] != '\0'); line_i++,reg_index++ )
+
+	int reg_index = 0;//입력이 제대로 되지않을시 에러
+	for (; (!isspace(line[line_i])) && (line[line_i] != '#') && (line[line_i] != ',') && (line[line_i] != '\0'); line_i++, reg_index++)
 	{
 		_reg[reg_index] = line[line_i];
 	}
 	int reg_encoding = find_reg(_reg);
-	printf("%X", reg_encoding );
+	printf("%X", reg_encoding);
 }
