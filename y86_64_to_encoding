@@ -6,6 +6,8 @@
 #include<stdlib.h>
 #include<ctype.h>
 #include<cinttypes>
+
+const int Label_n = 20;
 // Y86-64 -> 기계어 변환기
 
 
@@ -202,7 +204,10 @@ const char* reg[] =
 	"No register"
 };
 
-char* Label[20][20];
+char* Label[Label_n][Label_n];
+int Label_index;
+
+uint64_t Label_address[Label_n];
 
 void insrtruction_to_encoding();
 void input_error();
@@ -213,14 +218,14 @@ uint64_t get_integer();
 void Print_Encoding_Instruction(int number);
 int find_reg(char reg[]);
 void reg_in();
-
+void read_label();
 int address = 0x100;
 
 int main()
 {
 
 
-
+    read_label();
     fseek(stdio , 0, SEEK_SET );
 	while (!feof(stdin))
 	{
@@ -364,6 +369,8 @@ void insrtruction_to_encoding()
 
 
 
+
+
 		address += 9;
 		break;
 	case pushq:
@@ -479,7 +486,7 @@ void reg_in() //한개로 생각하고 둘다 처리하자! 쉼표떼기 + 공�
 }
 
 
-uint64_t get_integer()
+uint64_t get_integer()// 실제 메모리에 들어있는값도 읽을수있어야함.!!
 {
     uint64_t D = 0;
     while(getchar()=="%")
@@ -489,3 +496,102 @@ uint64_t get_integer()
     scanf_s("%" PRIX64, &D);
     return D;
 }   
+
+void read_label()
+{
+    int address = 0x100;
+
+    while (!feof(stdin))
+	{
+        char line[100] = {0,};  //한라인은 100자 이내로 생각.
+        //gets_s(line, 100);
+        
+        char __instruction[10] = { 0, };
+        const int buffer = 10;
+        scanf_s("%s", __instruction, sizeof(__instruction));
+
+        int ins_len = strlen(__instruction);
+        //__instruction[ins_len - 1] = '\0';
+        int index = 28;
+        for (int i = 0; i < 27; i++)
+        {
+            size_t len = strlen(instruction[i]);
+            if (!strncmp(__instruction, instruction[i], len))//같을때 0반환
+            {
+                index = i;
+                break;
+            }
+        }
+        printf("0x%x: ", address);
+        switch (index)
+        {
+            case halt:
+            case nop:
+            case ret: //90
+                address += 1;
+                break;
+                //20
+            case rrmovq:
+            case cmovle:
+            case cmovl:
+            case cmove:
+            case cmovne:
+            case cmovge:
+            case cmovg:
+                //60
+            case addq:
+            case subq:
+            case andq:
+            case xorq:
+                address += 2;
+                break;
+                //30
+            case irmovq:
+            {
+                address += 10;
+                break;
+            }	//40
+            case rmmovq:
+            {	
+                    
+                address += 10;
+                break;
+            }
+            case mrmovq:
+            {
+                address += 10;
+                break;
+            }
+                //70
+            case jmp:
+            case jle:
+            case jl:
+            case je:
+            case jne:
+            case jge:
+            case jg:
+                //80
+            case call:
+                address += 9;
+                break;
+            case pushq:
+            case popq:
+                address += 2;
+                break;
+            default: //라벨 먼저 받든지 말든지
+            {
+                if(__instruction[ins_len-1] == ':')
+                {
+                    strcpy(Label[Label_index],__instruction);         
+                    Label_address[Label_index] = address;
+                    Label_index++;   
+                }
+                else
+                {
+                    input_error();
+                }
+            }
+	    }
+    }
+
+}
