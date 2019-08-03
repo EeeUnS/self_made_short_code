@@ -206,7 +206,10 @@ char* Label[20][20];
 
 void insrtruction_to_encoding();
 void input_error();
-uint64_t little_endian(uint64_t integer);
+//uint64_t little_endian(uint64_t integer);
+uint64_t get_integer();
+
+
 void Print_Encoding_Instruction(int number);
 int find_reg(char reg[]);
 void reg_in();
@@ -215,6 +218,10 @@ int address = 0x100;
 
 int main()
 {
+
+
+
+    fseek(stdio , 0, SEEK_SET );
 	while (!feof(stdin))
 	{
 		insrtruction_to_encoding();
@@ -241,7 +248,7 @@ void insrtruction_to_encoding()
 			break;
 		}
 	}
-	printf("0x%X: ", address);
+	printf("0x%x: ", address);
 	switch (index)
 	{
 	case halt:
@@ -272,12 +279,14 @@ void insrtruction_to_encoding()
 		break;
 		//30
 	case irmovq:
-	{Print_Encoding_Instruction(index);
+	{
+        Print_Encoding_Instruction(index);
 		printf("F");
 
-		uint64_t D = 0;
-		scanf_s("%" PRIx64, &D);
+		uint64_t D = get_integer();
 		D =little_endian(D);
+
+
 		reg_in();
 		printf("%" PRIX64 "\n", D);
 		address += 10;
@@ -286,20 +295,56 @@ void insrtruction_to_encoding()
 	case rmmovq:
 	{	Print_Encoding_Instruction(index);
 		reg_in(); //rA
-		uint64_t D = 0;
-		scanf_s("%" PRIx64, &D);
+
+	    uint64_t D = get_integer();
+		D =little_endian(D);
+
+        char line[6];
+
+        scanf_s("%s", line , sizeof(line));
+
+        char rB[5] = {0,};
+        for(int i = 1 ; i < 4 ; i++)
+        {
+            rB[i-1] = line[i]; //  line에 (를 읽기때문에 index 는 1부터. 이게아니면 인풋값에러임
+        }
+        int rB_index = find_reg(rB);
+
+        printf("%X", rB_index);
+
 		printf("%" PRIx64, D);
+
+         
 		address += 10;
 		break;
 	}
 	case mrmovq:
-		Print_Encoding_Instruction(index);
-		reg_in();
+	{
+        Print_Encoding_Instruction(index); 
+        
+        // 메모리를 직접적으로 읽을수도있다 input D에 (%rdx)
+        uint64_t D = get_integer();
+		D =little_endian(D);
 
 
+        char line[6];
+
+        scanf_s("%s", line , sizeof(line));
+
+        char rB[5] = {0,};
+        for(int i = 1 ; i < 4 ; i++)
+        {
+            rB[i-1] = line[i]; //  line에 (를 읽기때문에 index 는 1부터. 이게아니면 인풋값에러임
+        }
+        int rB_index = find_reg(rB);
+        
+        reg_in();
+        printf("%X", rB_index);
+		printf("%" PRIx64, D);
 
 		address += 10;
 		break;
+    }
 		//70
 	case jmp:
 	case jle:
@@ -313,6 +358,11 @@ void insrtruction_to_encoding()
 		//주소값을 저장해서 출력해야됨 씹헬
 		Print_Encoding_Instruction(index);
 		//Printf_destination
+        char line[20];
+        scanf_s("%s", line , sizeof(line));
+
+
+
 
 		address += 9;
 		break;
@@ -324,8 +374,17 @@ void insrtruction_to_encoding()
 		address += 2;
 		break;
 	default: //라벨 먼저 받든지 말든지
-		break;
+
+        char line[6];
+        scanf_s("%s", line , sizeof(line));
+
+        printf("\n");
+        break;
 	}
+
+    while(getchar() != '\n')
+    {;  
+    }
 }
 
 void input_error()
@@ -335,6 +394,9 @@ void input_error()
 	return;
 }
 //irmovq 0x12345678 %rdi
+
+
+
 uint64_t little_endian(uint64_t integer)
 {
 	uint64_t num = integer;
@@ -349,6 +411,7 @@ uint64_t little_endian(uint64_t integer)
 	}
 	return intreturn;
 }
+
 
 void Print_Encoding_Instruction(int number)
 {
@@ -371,7 +434,12 @@ int find_reg(char _reg[])
 		{
 			return index;
 		}
-	}
+	} // 상수값 $8g
+
+
+
+
+
 	input_error();
 	return -1;
 }
@@ -409,3 +477,15 @@ void reg_in() //한개로 생각하고 둘다 처리하자! 쉼표떼기 + 공�
 	int reg_encoding = find_reg(_reg);
 	printf("%X", reg_encoding);
 }
+
+
+uint64_t get_integer()
+{
+    uint64_t D = 0;
+    while(getchar()=="%")
+    {
+        ;
+    }
+    scanf_s("%" PRIX64, &D);
+    return D;
+}   
