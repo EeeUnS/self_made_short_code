@@ -88,3 +88,53 @@ module ALU(
         endcase
 
 endmodule // ALU
+
+//Gated D 래치
+module D_latch( 
+    input D,Clk;
+    output reg Q;
+);
+    always @(D, Clk)
+        if(Clk)
+            Q=D;
+endmodule // D_latch    
+
+
+module flipflop(D,Clock,Q
+    
+);
+    input D,Clock;
+    output reg Q;
+
+    always @(posedge Clock)
+        Q=D;
+
+endmodule // flipflopD
+
+
+
+module flipflop_not_syn(D,Clock,Resten,Q);
+    input D,Clock,Resetn;
+    output reg Q;
+
+    always @(negedge Resetn,posedge Clock)
+    if(!Resetn)
+        Q <= 0;
+    else
+        Q <= D;
+
+endmodule  //비동기 리셋 기능이 있는 D 플립플롭
+
+
+module flipflop_syn(D,Clock,Resten,Q);
+    input D,Clock,Resetn;
+    output reg Q;
+
+    always @(posedge Clock)
+    if(!Resetn)
+        Q <= 0;
+    else
+        Q <= D;
+
+endmodule  //동기 리셋 기능이 있는 D 플립플롭
+
