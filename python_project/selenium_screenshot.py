@@ -3,6 +3,7 @@ from selenium import webdriver
 import os
 import datetime
 
+# https://okky.kr/article/603075
 os.environ["LANG"] = "en_US.UTF-8"
 # Create a new cromedriver
 DRIVER_DIR = r'.\chromedriver.exe'
