@@ -1,0 +1,14 @@
+// test_vector: shift/rotate test
+//
+007f // mov r0, #0x7f
+0081 // mov r1, #1
+8810 // lsr r0, r0, r1
+008a // mov r1, #10
+8010 // lsl r0, r0, r1
+0088 // mov r1, #8
+9010 // asr r0, r0, r1
+008f // mov r1, #16
+9810 // ror r0, r0, r1
+4000 // nop
+4000 // nop
+3800 // end

@@ -1,0 +1,17 @@
+The SimpleCore
+-----------------
+Copyright (c) 2001. Integrated Computer Systems Lab., KAIST
+All rights reserved.
+The SimpleCore Page: http://www.donny.co.kr/simplecore
+
+* Feature
+- 16-bit RISC(Reduced Instruction Set Computer)
+- Three-stage pipelined Harvard Architecture
+
+* This is an design example for 'How to design microprocessors' in IDEC Newsletter, 2001.July ~ Oct. (http://www.idec.or.kr)
+
+* Simulation Command
+
+$ verilog -f simplecore.f
+
+2001. Aug. Bae Young-Don (donny@ics.kaist.ac.kr)
