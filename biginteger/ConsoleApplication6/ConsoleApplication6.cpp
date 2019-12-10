@@ -33,8 +33,8 @@ public:
 	bigint &operator=(const bigint& a) ;
 	bigint(const bigint &a) ;
 
-	bigint &operator=(bigint&& a) ;
-	bigint(bigint &&a);
+	bigint &operator=(bigint&& a) noexcept ;
+	bigint(bigint &&a) noexcept;
 
 	// bigint operator=(const char* a);
 	// bigint operator=(const int a);
@@ -193,7 +193,7 @@ bigint::~bigint()
 	delete[]mString;
 }
 
-bigint& bigint::operator=(bigint&& a) 
+bigint& bigint::operator=(bigint&& a) noexcept
 {
 	std::cout << "이동 =" << std::endl;
 	mString = a.mString;
@@ -202,7 +202,7 @@ bigint& bigint::operator=(bigint&& a)
 	mCapacity = (a.mCapacity);
 	return *this;
 }
-bigint::bigint(bigint&& a) :mString(a.mString), mSign(a.mSign), mLength(a.mLength), mCapacity(a.mCapacity) 
+bigint::bigint(bigint&& a)noexcept :mString(a.mString), mSign(a.mSign), mLength(a.mLength), mCapacity(a.mCapacity)
 {
 	std::cout << "이동 생성자 호출 !" << std::endl;
 	a.mString = nullptr;
@@ -277,7 +277,6 @@ bigint bigint::operator*(const bigint& a)
 	tmp.mLength = a.mLength + this->mLength - 1;
 	int aLength = a.mLength;
 	int thisLength = this->mLength;
-	
 	int carry = 0;
 	for (int i = 0; i < aLength; ++i)
 	{
@@ -332,7 +331,7 @@ std::ostream& operator<<(std::ostream& os, const bigint& a)
 	}
 	for (int i = 0; i < len; i++)
 	{
-		os << (char)(a.mString[i] + '0');
+		os << static_cast<int>(a.mString[i]);
 	}
 	return os;
 }
