@@ -23,12 +23,14 @@ public:
 
 
 	const bigint operator+(const bigint& a) const ;
-	bigint operator-(const bigint& a);
+	const bigint operator-(const bigint& a) const ;
+	const bigint operator-() const;
+
 	//O(n^2)후에 카라추바로 개선
-	bigint operator*(const bigint& a);
+	bigint operator*(const bigint& a) const;
 	
-	bigint operator/(const bigint& a);
-	bigint operator%(const bigint& a);
+	bigint operator/(const bigint& a) const;
+	bigint operator%(const bigint& a) const;
 
 	bigint &operator=(const bigint& a) ;
 	bigint(const bigint &a) ;
@@ -213,10 +215,10 @@ bigint::bigint(bigint&& a)noexcept :mString(a.mString), mSign(a.mSign), mLength(
 
 const bigint bigint::operator+(const bigint& a) const //sign이 같을때 +한다.
 {
-	/*if (a.mSign != this->mSign)
+	if (a.mSign != this->mSign)
 	{
 		return *this - a;
-	}*/
+	}
 	bigint tmp;
 	tmp.mSign = a.mSign;
 	tmp.mCapacity = a.mCapacity > this->mCapacity ? a.mCapacity : this->mCapacity;
@@ -247,23 +249,31 @@ const bigint bigint::operator+(const bigint& a) const //sign이 같을때 +한�
 	return tmp;
 }
 
-bigint bigint::operator-(const bigint& a)
+
+const bigint bigint::operator-(const bigint& a) const
 {
 	if (a.mSign != this->mSign)
 	{
 		return *this + a;
 	}
+	//same sign.
+	//큰값을 구하고 작은 값을 뺀후에 부호를 결정한다.
 
 }
 
-
+const bigint bigint::operator-() const
+{
+	bigint tmp = *this;
+	tmp.mSign = !this->mSign;
+	return tmp;
+}
 /*
 ++ +
 +- -
 -+ -
 -- +
 */
-bigint bigint::operator*(const bigint& a)
+bigint bigint::operator*(const bigint& a) const
 {
 	bigint tmp;
 	tmp.mSign = false;//-
@@ -311,15 +321,81 @@ bigint bigint::operator*(const bigint& a)
 //{
 //
 //}
-//
-//bigint bigint::operator>(const bigint& a)
-//{
-//
-//}
-//bigint bigint::operator<(const bigint& a)
-//{
-//
-//}
+
+bigint bigint::operator>(const bigint& a)
+{
+	// if(this->mSign !=  a.mSign)
+	// {
+	// 	return this->mSign >  a.mSign;
+	// }
+	if( this->mSign == true && a.mSign == false)
+	{
+		return true;
+	}
+	if(this->mSign == false && a.mSign == true)
+	{
+		return false;
+	}
+	//두 부호가 같다.
+	// if(this->mLength ^ a.mLength)
+	// {
+	// 	return this->mLength > a.mLength
+	// }
+
+	if(this->mLength > a.mLength)
+	{
+		return true;
+	}
+	if(this->mLength < a.mLength)
+	{
+		return false;
+	}
+	//length same
+	for(int i = mLength ;  i >= 0  ;--i)
+	{
+		if (this->mString[i] != a.mString[i])
+		{
+			return this->mString[i] > a.mString[i];
+		}
+	}
+}
+bigint bigint::operator<(const bigint& a)
+{
+	// if(this->mSign !=  a.mSign)
+	// {
+	// 	return this->mSign >  a.mSign;
+	// }
+	if( this->mSign == true && a.mSign == false)
+	{
+		return false;
+	}
+	if(this->mSign == false && a.mSign == true)
+	{
+		return true;
+	}
+	//두 부호가 같다.
+	// if(this->mLength ^ a.mLength)
+	// {
+	// 	return this->mLength > a.mLength
+	// }
+
+	if(this->mLength > a.mLength)
+	{
+		return false;
+	}
+	if(this->mLength < a.mLength)
+	{
+		return true;
+	}
+	//length same
+	for(int i = mLength ;  i >= 0  ;--i)
+	{
+		if (this->mString[i] != a.mString[i])
+		{
+			return this->mString[i]  a.mString[i];
+		}
+	}
+}
 
 
 std::ostream& operator<<(std::ostream& os, const bigint& a)
