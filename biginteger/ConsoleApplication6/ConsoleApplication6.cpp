@@ -392,7 +392,7 @@ bigint bigint::operator<(const bigint& a)
 	{
 		if (this->mString[i] != a.mString[i])
 		{
-			return this->mString[i]  a.mString[i];
+			return this->mString[i] < a.mString[i];
 		}
 	}
 }
