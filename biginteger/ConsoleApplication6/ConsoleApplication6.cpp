@@ -19,24 +19,37 @@ public:
 	bigint(const int a); //32bit std::int32_t
 	bigint(const long long a); // 64bit std::int64_t
 
+	//copy 
+	bigint &operator=(const bigint& a) ;
+	bigint(const bigint &a) ;
+	//move
+	bigint &operator=(bigint&& a) noexcept ;
+	bigint(bigint &&a) noexcept;
+
 	~bigint();
 
 
 	const bigint operator+(const bigint& a) const ;
 	const bigint operator-(const bigint& a) const ;
-	const bigint operator-() const;
-
-	//O(n^2)후에 카라추바로 개선
-	bigint operator*(const bigint& a) const;
+	const bigint operator-() const; // -this 반환
+	const bigint operator*(const bigint& a) const;//O(n^2)후에 카라추바로 개선
+	const bigint operator/(const bigint& a) const;
+	const bigint operator%(const bigint& a) const;
 	
-	bigint operator/(const bigint& a) const;
-	bigint operator%(const bigint& a) const;
+	
+	bigint& operator+=(const bigint& a);
+	bigint& operator+=(const bigint& a);
+	bigint& operator-=(const bigint& a);
+	bigint& operator*=(const bigint& a);//O(n^2)후에 카라추바로 개선
+	bigint& operator/=(const bigint& a);
+	bigint& operator%=(const bigint& a);
 
-	bigint &operator=(const bigint& a) ;
-	bigint(const bigint &a) ;
-
-	bigint &operator=(bigint&& a) noexcept ;
-	bigint(bigint &&a) noexcept;
+	//전위증가
+	bigint& operator++();
+	bigint operator++(int);
+	//전위감소
+	bigint& operator--(); 
+	bigint operator--(int);
 
 	// bigint operator=(const char* a);
 	// bigint operator=(const int a);
@@ -46,15 +59,19 @@ public:
 	// bigint operator=(const long int a);
 
 	bool operator==(const bigint& a);
+	bool operator!=(const bigint& a);
 	bool operator>(const bigint& a);
 	bool operator<(const bigint& a);
-	
-	friend std::ostream& operator<<(std::ostream& os, const bigint& a);
-    
+	bool operator>=(const bigint& a);
+	bool operator<=(const bigint& a);
+	friend bool operator!=(const bigint& a, const bigint& b);
     friend bool operator==(const bigint& a, const bigint& b);
 	friend bool operator>(const bigint& a, const bigint& b);
 	friend bool operator<(const bigint& a, const bigint& b);
+	friend bool operator>=(const bigint& a, const bigint& b);
+	friend bool operator<=(const bigint& a, const bigint& b);
 
+	friend std::ostream& operator<<(std::ostream& os, const bigint& a);
 
 private:
 	char* mString; // default 128
@@ -516,6 +533,10 @@ a*b=c  sign
 */
 bigint bigint::operator*(const bigint& a) const
 {
+	if(a == 0)
+	{
+		return tmp(0);
+	}
 	bigint tmp;
 	tmp.mSign = false;//-
 	if (a.mSign == this->mSign)
@@ -547,32 +568,83 @@ bigint bigint::operator*(const bigint& a) const
 }
 
 
+/*
+가장 기본적인 나눗셈을 그대로 구현
+*/
+
 
 bigint bigint::operator/(const bigint& a) const 
 {
     // a/b 
-    bigint tmp = *this;
-    if( tmp < a )
+    if( mLength < a.mLength )
     {
-        return tmp;
+        return tmp();
     }
 
+	const int aLen = a.mLength;
+	const int thisLen = mLength;
+
+	bigint digit = 0 ;
+	for(int i = 0 ; i < aLen ; ++i)
+	{
+		digit = digit *10 + mString[thisLen - i - 1];
+	}
+	bigint tmp;
+	for(int i = thisLen - aLen ; i >= 0  ; --i)
+	{
+		digit = digit*10 + mString[i];
+		int i = 9
+		while(i>0)
+		{
+			bigint reg = a*i;
+			if( digit - reg > 0 )
+			{
+				digit -= reg;
+				tmp += i;
+				break;
+			}
+			--i;
+		}
+		tmp *= 10;
+	}
+	return tmp;
 }
 
-//bigint bigint::operator%(const bigint& a)
-//{
-//
-//}
-//
-//
-//bigint bigint::operator=(const bigint& a)
-//{
-//
-//}
+bigint bigint::operator%(const bigint& a)
+{
+    if( mLength < a.mLength )
+    {
+        return tmp(this);
+    }
 
+	const int aLen = a.mLength;
+	const int thisLen = mLength;
 
-
-
+	bigint digit = 0 ;
+	for(int i = 0 ; i < aLen ; ++i)
+	{
+		digit = digit *10 + mString[thisLen - i - 1];
+	}
+	bigint tmp;
+	for(int i = thisLen - aLen ; i >= 0  ; --i)
+	{
+		digit = digit*10 + mString[i];
+		int i = 9
+		while(i>0)
+		{
+			bigint reg = a*i;
+			if( digit - reg > 0 )
+			{
+				digit -= reg;
+				tmp += i;
+				break;
+			}
+			--i;
+		}
+		tmp *= 10;
+	}
+	return digit;
+}
 std::ostream& operator<<(std::ostream& os, const bigint& a)
 {
 	const int len = a.mLength;
