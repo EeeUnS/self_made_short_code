@@ -38,7 +38,6 @@ public:
 	
 	
 	bigint& operator+=(const bigint& a);
-	bigint& operator+=(const bigint& a);
 	bigint& operator-=(const bigint& a);
 	bigint& operator*=(const bigint& a);//O(n^2)후에 카라추바로 개선
 	bigint& operator/=(const bigint& a);
@@ -58,18 +57,19 @@ public:
 	// bigint operator=(const long long int a);
 	// bigint operator=(const long int a);
 
-	bool operator==(const bigint& a);
-	bool operator!=(const bigint& a);
-	bool operator>(const bigint& a);
-	bool operator<(const bigint& a);
-	bool operator>=(const bigint& a);
-	bool operator<=(const bigint& a);
-	friend bool operator!=(const bigint& a, const bigint& b);
-    friend bool operator==(const bigint& a, const bigint& b);
-	friend bool operator>(const bigint& a, const bigint& b);
-	friend bool operator<(const bigint& a, const bigint& b);
-	friend bool operator>=(const bigint& a, const bigint& b);
-	friend bool operator<=(const bigint& a, const bigint& b);
+	bool operator==(const bigint& a) const ;
+	bool operator!=(const bigint& a) const ;
+	bool operator>(const bigint& a) const ;
+	bool operator<(const bigint& a) const ;
+	bool operator>=(const bigint& a) const ;
+	bool operator<=(const bigint& a) const ;
+
+	// friend bool operator!=(const bigint& a, const bigint& b);
+    // friend bool operator==(const bigint& a, const bigint& b);
+	// friend bool operator>(const bigint& a, const bigint& b);
+	// friend bool operator<(const bigint& a, const bigint& b);
+	// friend bool operator>=(const bigint& a, const bigint& b);
+	// friend bool operator<=(const bigint& a, const bigint& b);
 
 	friend std::ostream& operator<<(std::ostream& os, const bigint& a);
 
@@ -212,204 +212,53 @@ bigint::bigint(const long long a) // 64bit std::int64_t
 	mLength = i;
 }
 
+
+bigint::bigint(const bigint &a) : mCapacity(128) , mSign(true), mString(nullptr),mLength(0)
+{
+	std::cout << "복사생성자사용" << '\n';
+	if (this == &a)
+       {return ;}
+	if(mCapacity != a.mCapacity)
+	{
+		mCapacity = a.mCapacity;
+	}
+	mString = new char[a.mCapacity]();
+	mSign = a.mSign;
+	int len = mLength = a.mLength;
+	for(int i = 0 ; i < len ; i++)
+	{
+		mString[i] = a.mString[i];
+	}
+}
+
+
 bigint::~bigint()
 {
 	delete[]mString;
 }
 
-
-bool bigint::operator==(const bigint& a)
+bigint &bigint::operator=(const bigint& a)
 {
-    if( this->mSign != a.mSign)
+	std::cout << "일반 대입연산자" << '\n';
+	 if (&a == this )
+       {return *this;}
+	if(mCapacity != a.mCapacity)
 	{
-		return false;
+		mCapacity = a.mCapacity;
+		delete[]mString;
+		mString = new char[a.mCapacity]();
 	}
-	if(mLength != a.mLength)
+	mSign = a.mSign;
+	int len = mLength = a.mLength;
+	for(int i = 0 ; i < len ; i++)
 	{
-		return false;
+		mString[i] = a.mString[i];
 	}
-    // 부호도같고 길이도같다.
-    for(int i = mLength ; i >= 0 ; --i)
-    {
-        if (this->mString[i] != a.mString[i])
-		{
-			return false;
-		}
-    }
-    return true;
+	
+
+	return *this;
 }
 
-
-
-bool bigint::operator>(const bigint& a)
-{
-	// if(this->mSign !=  a.mSign)
-	// {
-	// 	return this->mSign >  a.mSign;
-	// }
-	if( this->mSign == true && a.mSign == false)
-	{
-		return true;
-	}
-	if(this->mSign == false && a.mSign == true)
-	{
-		return false;
-	}
-	//두 부호가 같다.
-	// if(this->mLength ^ a.mLength)
-	// {
-	// 	return this->mLength > a.mLength
-	// }
-
-	if(this->mLength > a.mLength)
-	{
-		return true;
-	}
-	if(this->mLength < a.mLength)
-	{
-		return false;
-	}
-	//length same
-	for(int i = mLength ;  i >= 0  ;--i)
-	{
-		if (this->mString[i] != a.mString[i])
-		{
-			return this->mString[i] > a.mString[i];
-		}
-	}
-}
-bool bigint::operator<(const bigint& a)
-{
-	// if(this->mSign !=  a.mSign)
-	// {
-	// 	return this->mSign >  a.mSign;
-	// }
-	if( this->mSign == true && a.mSign == false)
-	{
-		return false;
-	}
-	if(this->mSign == false && a.mSign == true)
-	{
-		return true;
-	}
-	//두 부호가 같다.
-	// if(this->mLength ^ a.mLength)
-	// {
-	// 	return this->mLength > a.mLength
-	// }
-
-	if(this->mLength > a.mLength)
-	{
-		return false;
-	}
-	if(this->mLength < a.mLength)
-	{
-		return true;
-	}
-	//length same
-	for(int i = mLength ;  i >= 0  ;--i)
-	{
-		if (this->mString[i] != a.mString[i])
-		{
-			return this->mString[i] < a.mString[i];
-		}
-	}
-}
-//friend
-bool operator==(const bigint& a, const bigint& b)
-{
-    if( a.mSign != b.mSign)
-	{
-		return false;
-	}
-	if(a.mLength != b.mLength)
-	{
-		return false;
-	}
-    // 부호도같고 길이도같다.
-    for(int i = a.mLength ; i >= 0 ; --i)
-    {
-        if (a.mString[i] != b.mString[i])
-		{
-			return false;
-		}
-    }
-    return true;
-}
-bool operator>(const bigint& a, const bigint& b)
-{
-	// if(a.mSign !=  b.mSign)
-	// {
-	// 	return a.mSign >  b.mSign;
-	// }
-	if( a.mSign == true && b.mSign == false)
-	{
-		return true;
-	}
-	if(a.mSign == false && b.mSign == true)
-	{
-		return false;
-	}
-	//두 부호가 같다.
-	// if(a.mLength ^ b.mLength)
-	// {
-	// 	return a.mLength > b.mLength
-	// }
-
-	if(a.mLength > b.mLength)
-	{
-		return true;
-	}
-	if(a.mLength < b.mLength)
-	{
-		return false;
-	}
-	//length same
-	for(int i = a.mLength ;  i >= 0  ;--i)
-	{
-		if (a.mString[i] != b.mString[i])
-		{
-			return a.mString[i] > b.mString[i];
-		}
-	}
-}
-bool operator<(const bigint& a, const bigint& b)
-{
-	// if(a.mSign !=  b.mSign)
-	// {
-	// 	return a.mSign >  b.mSign;
-	// }
-	if( a.mSign == true && b.mSign == false)
-	{
-		return false;
-	}
-	if(a.mSign == false && b.mSign == true)
-	{
-		return true;
-	}
-	//두 부호가 같다.
-	// if(a.mLength ^ b.mLength)
-	// {
-	// 	return a.mLength > b.mLength
-	// }
-
-	if(a.mLength > b.mLength)
-	{
-		return false;
-	}
-	if(a.mLength < b.mLength)
-	{
-		return true;
-	}
-	//length same
-	for(int i = a.mLength ;  i >= 0  ;--i)
-	{
-		if (a.mString[i] != b.mString[i])
-		{
-			return a.mString[i] < b.mString[i];
-		}
-	}
-}
 
 bigint& bigint::operator=(bigint&& a) noexcept
 {
@@ -431,14 +280,14 @@ bigint::bigint(bigint&& a)noexcept :mString(a.mString), mSign(a.mSign), mLength(
 
 const bigint bigint::operator+(const bigint& a) const //sign이 같을때 +한다.
 {
-	if (a.mSign != this->mSign)
+	if (a.mSign != mSign)
 	{
 		return *this - a;
 	}
 	bigint tmp;
 	tmp.mSign = a.mSign;
-	tmp.mCapacity = a.mCapacity > this->mCapacity ? a.mCapacity : this->mCapacity;
-	if ((a.mCapacity == a.mLength) || (this->mCapacity == this->mLength)) //overflow고려안해도됨
+	tmp.mCapacity = a.mCapacity > mCapacity ? a.mCapacity : mCapacity;
+	if ((a.mCapacity == a.mLength) || (mCapacity == mLength)) //overflow고려안해도됨
 	{
 		tmp.mCapacity *= 2;
 	}
@@ -448,12 +297,12 @@ const bigint bigint::operator+(const bigint& a) const //sign이 같을때 +한�
 		tmp.mString = new char[tmp.mCapacity]();
 	}
 
-	tmp.mLength = a.mLength > this->mLength ? a.mLength : this->mLength;
+	tmp.mLength = a.mLength > mLength ? a.mLength : mLength;
 	int carry = 0;
 	int Length = tmp.mLength;
 	for (int i = 0; i < Length; i++)
 	{
-		carry = this->mString[i] + a.mString[i] + carry;
+		carry = mString[i] + a.mString[i] + carry;
 		tmp.mString[i] = carry % 10;
 		carry /= 10;
 	}
@@ -468,7 +317,7 @@ const bigint bigint::operator+(const bigint& a) const //sign이 같을때 +한�
 
 const bigint bigint::operator-(const bigint& a) const
 {
-	if (a.mSign != this->mSign)
+	if (a.mSign != mSign)
 	{
 		return *this + a;
 	}
@@ -520,9 +369,11 @@ const bigint bigint::operator-() const
 {
     std::cout << "test " ; 
 	bigint tmp = *this;
-	tmp.mSign = !this->mSign;
+	tmp.mSign = !mSign;
 	return tmp;
 }
+
+
 
 /*
 a*b=c  sign
@@ -531,30 +382,30 @@ a*b=c  sign
 -+ -
 -- +
 */
-bigint bigint::operator*(const bigint& a) const
+const bigint bigint::operator*(const bigint& a) const
 {
 	if(a == 0)
 	{
-		return tmp(0);
+		return bigint(0);
 	}
 	bigint tmp;
 	tmp.mSign = false;//-
-	if (a.mSign == this->mSign)
+	if (a.mSign == mSign)
 	{
 		tmp.mSign = true;//+
 	}
-	tmp.mCapacity = a.mCapacity > this->mCapacity ? a.mCapacity * 2 : this->mCapacity * 2;
+	tmp.mCapacity = a.mCapacity > mCapacity ? a.mCapacity * 2 : mCapacity * 2;
 	delete[]tmp.mString;
 	tmp.mString = new char[tmp.mCapacity]();
-	tmp.mLength = a.mLength + this->mLength - 1;
+	tmp.mLength = a.mLength + mLength - 1;
 	int aLength = a.mLength;
-	int thisLength = this->mLength;
+	int thisLength = mLength;
 	int carry = 0;
 	for (int i = 0; i < aLength; ++i)
 	{
 		for (int j = 0; j < thisLength; ++j)
 		{
-			carry = this->mString[j] * a.mString[i] + carry;
+			carry = mString[j] * a.mString[i] + carry;
 			tmp.mString[i + j] += carry % 10;
 			carry /= 10;
 		}
@@ -571,14 +422,12 @@ bigint bigint::operator*(const bigint& a) const
 /*
 가장 기본적인 나눗셈을 그대로 구현
 */
-
-
-bigint bigint::operator/(const bigint& a) const 
+const bigint bigint::operator/(const bigint& a) const 
 {
     // a/b 
     if( mLength < a.mLength )
     {
-        return tmp();
+        return bigint();
     }
 
 	const int aLen = a.mLength;
@@ -593,7 +442,7 @@ bigint bigint::operator/(const bigint& a) const
 	for(int i = thisLen - aLen ; i >= 0  ; --i)
 	{
 		digit = digit*10 + mString[i];
-		int i = 9
+		int i = 9;
 		while(i>0)
 		{
 			bigint reg = a*i;
@@ -610,11 +459,12 @@ bigint bigint::operator/(const bigint& a) const
 	return tmp;
 }
 
-bigint bigint::operator%(const bigint& a)
+
+const bigint bigint::operator%(const bigint& a) const
 {
     if( mLength < a.mLength )
     {
-        return tmp(this);
+        return bigint(*this);
     }
 
 	const int aLen = a.mLength;
@@ -629,7 +479,7 @@ bigint bigint::operator%(const bigint& a)
 	for(int i = thisLen - aLen ; i >= 0  ; --i)
 	{
 		digit = digit*10 + mString[i];
-		int i = 9
+		int i = 9;
 		while(i>0)
 		{
 			bigint reg = a*i;
@@ -645,6 +495,396 @@ bigint bigint::operator%(const bigint& a)
 	}
 	return digit;
 }
+
+
+bigint& bigint::operator+=(const bigint& a)
+{
+	if (a.mSign != mSign)
+	{
+		return (*this -= a);
+	}
+	mLength = a.mLength > mLength ? a.mLength : mLength;
+	if ((a.mCapacity == a.mLength) || (mCapacity == mLength)) //overflow고려안해도됨
+	{
+		mCapacity *= 2;
+		char *tmp = new char[mCapacity]();
+		int len = mLength;
+		for(int i = 0 ; i < len ; i++)
+		{
+			tmp[i] = mString[i];
+		}
+		delete[]mString;
+		mString  = tmp;
+	}
+	int carry = 0;
+	int Length = mLength;
+	for (int i = 0; i < Length; i++)
+	{
+		carry = mString[i] + a.mString[i] + carry;
+		mString[i] = carry % 10;
+		carry /= 10;
+	}
+	if (carry != 0)
+	{
+		mString[Length] = carry;
+		mLength++;
+	}
+	return *this;
+}
+
+bigint& bigint::operator-=(const bigint& a)
+{
+	return (*this = *this - a);
+	// if (a.mSign != mSign)
+	// {
+	// 	return (*this += a);
+	// }
+	// //same sign.
+	// //큰값을 구하고 작은 값을 뺀후에 부호를 결정한다.
+    // bigint tmp;
+    // const bigint *b;
+    // if( a == *this)
+    // {
+    //     tmp.mSign = true;
+    //     tmp.mLength = 1;
+    //     return tmp;
+    // }
+    
+    // if(*this > a)
+    // {
+    //     tmp = *this;
+    //     b = &a;
+    // }
+    // else
+    // {
+    //     tmp = a;
+    //     tmp.mSign = !tmp.mSign; // 뒤의 절댓값이 더크다.
+    //     b = this;
+    // }
+    // const int len = b->mLength;
+    // for(int i = len ; i >= 0; --i)
+    // {
+    //     tmp.mString[i] -=  b->mString[i];
+    //     int j = 0;
+        
+    //     while(tmp.mString[i+j] < 0) // 음수처리 tmp.mLength바뀔수있음
+    //     {
+    //         tmp.mString[i+j] += 10;
+    //         --tmp.mString[i+j+1];
+    //         ++j;
+    //     }
+    //     if(tmp.mString[tmp.mLength-1] == 0)
+    //     {
+    //         --tmp.mLength;
+    //     }
+    // }
+	// return *this;
+}
+bigint& bigint::operator*=(const bigint& a)
+{
+	return (*this = *this * a);
+
+	// if(a == 0)
+	// {
+	// 	int len = mLength;
+	// 	for(int i = 0 ; i < len ; ++i)
+	// 	{
+	// 		mString[i] = 0 ;
+	// 	}
+	// 	mSign = true;
+	// 	mLength = 1;
+	// 	return *this;
+	// }
+	// // operator*
+	// bigint tmp;
+	// tmp.mSign = false;//-
+	// if (a.mSign == mSign)
+	// {
+	// 	tmp.mSign = true;//+
+	// }
+	// tmp.mCapacity = a.mCapacity > mCapacity ? a.mCapacity * 2 : mCapacity * 2;
+	// delete[]tmp.mString;
+	// tmp.mString = new char[tmp.mCapacity]();
+	// tmp.mLength = a.mLength + mLength - 1;
+	// int aLength = a.mLength;
+	// int thisLength = mLength;
+	// int carry = 0;
+	// for (int i = 0; i < aLength; ++i)
+	// {
+	// 	for (int j = 0; j < thisLength; ++j)
+	// 	{
+	// 		carry = mString[j] * a.mString[i] + carry;
+	// 		tmp.mString[i + j] += carry % 10;
+	// 		carry /= 10;
+	// 	}
+	// 	tmp.mString[i + thisLength] += carry;
+	// }
+	// if (carry != 0)
+	// {
+	// 	++tmp.mLength;
+	// }
+	
+	// //copy
+	// const int thisLen = mLength;
+	// const int len = tmp.mLength;
+	// for(int i = 0 ; i <  len ; i++)
+	// {
+	// 	mString[i] = tmp.mString[i] ;
+	// }
+	// for(int i = len; i < thisLen ; ++i)
+	// {
+	// 	mString[i] = 0 ;
+	// }
+	// mLength = tmp.mLength;
+
+	// return *this;
+}//O(n^2)후에 카라추바로 개선
+
+
+bigint& bigint::operator/=(const bigint& a)
+{
+	return (*this = *this / a);
+
+
+    // // a/b 
+    // if( mLength < a.mLength )
+    // {
+    //     return bigint();
+    // }
+
+	// const int aLen = a.mLength;
+	// const int thisLen = mLength;
+
+	// bigint digit = 0 ;
+	// for(int i = 0 ; i < aLen ; ++i)
+	// {
+	// 	digit = digit *10 + mString[thisLen - i - 1];
+	// }
+	// bigint tmp;
+	// for(int i = thisLen - aLen ; i >= 0  ; --i)
+	// {
+	// 	digit = digit*10 + mString[i];
+	// 	int i = 9;
+	// 	while(i>0)
+	// 	{
+	// 		bigint reg = a*i;
+	// 		if( digit - reg > 0 )
+	// 		{
+	// 			digit -= reg;
+	// 			tmp += i;
+	// 			break;
+	// 		}
+	// 		--i;
+	// 	}
+	// 	tmp *= 10;
+	// }
+	
+	// //copy
+	// const int len = tmp.mLength;
+	// for(int i = 0 ; i <  len ; i++)
+	// {
+	// 	mString[i] = tmp.mString[i] ;
+	// }
+	// for(int i = len; i < thisLen ; ++i)
+	// {
+	// 	mString[i] = 0 ;
+	// }
+	// mLength = tmp.mLength;
+	// return *this;
+}
+
+
+bigint& bigint::operator%=(const bigint& a)
+{
+	return (*this = *this % a);
+
+    // if( mLength < a.mLength )
+    // {
+    //     return *this;
+    // }
+	// const int aLen = a.mLength;
+	// const int thisLen = mLength;
+
+	// bigint digit = 0 ;
+	// for(int i = 0 ; i < aLen ; ++i)
+	// {
+	// 	digit = digit *10 + mString[thisLen - i - 1];
+	// }
+	// bigint tmp;
+	// for(int i = thisLen - aLen ; i >= 0  ; --i)
+	// {
+	// 	digit = digit*10 + mString[i];
+	// 	int i = 9;
+	// 	while(i>0)
+	// 	{
+	// 		bigint reg = a*i;
+	// 		if( digit - reg > 0 )
+	// 		{
+	// 			digit -= reg;
+	// 			tmp += i;
+	// 			break;
+	// 		}
+	// 		--i;
+	// 	}
+	// 	tmp *= 10;
+	// }
+	// //operator%
+
+	// //copy
+	// const int len = digit.mLength;
+	// for(int i = 0 ; i <  len ; i++)
+	// {
+	// 	mString[i] = digit.mString[i] ;
+	// }
+	// for(int i = len; i < thisLen ; ++i)
+	// {
+	// 	mString[i] = 0 ;
+	// }
+	// mLength = digit.mLength;
+	// return *this;
+}
+
+//전위증가
+bigint& bigint::operator++()
+{
+	return *this;
+}
+bigint bigint::operator++(int)
+{
+
+}
+//전위감소
+bigint& bigint::operator--()
+{
+	return *this;
+}
+bigint bigint::operator--(int)
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+bool bigint::operator==(const bigint& a) const
+{
+    if( mSign != a.mSign)
+	{
+		return false;
+	}
+	if(mLength != a.mLength)
+	{
+		return false;
+	}
+    // 부호도같고 길이도같다.
+    for(int i = mLength ; i >= 0 ; --i)
+    {
+        if (mString[i] != a.mString[i])
+		{
+			return false;
+		}
+    }
+    return true;
+}
+bool bigint::operator!=(const bigint& a) const
+{
+	return !(*this == a);
+}
+
+
+bool bigint::operator>(const bigint& a) const
+{
+	// if(mSign !=  a.mSign)
+	// {
+	// 	return mSign >  a.mSign;
+	// }
+	if( mSign == true && a.mSign == false)
+	{
+		return true;
+	}
+	if(mSign == false && a.mSign == true)
+	{
+		return false;
+	}
+	//두 부호가 같다.
+	// if(mLength ^ a.mLength)
+	// {
+	// 	return mLength > a.mLength
+	// }
+
+	if(mLength > a.mLength)
+	{
+		return true;
+	}
+	if(mLength < a.mLength)
+	{
+		return false;
+	}
+	//length same
+	for(int i = mLength ;  i >= 0  ;--i)
+	{
+		if (mString[i] != a.mString[i])
+		{
+			return mString[i] > a.mString[i];
+		}
+	}
+}
+bool bigint::operator<(const bigint& a) const
+{
+	// if(mSign !=  a.mSign)
+	// {
+	// 	return mSign >  a.mSign;
+	// }
+	if( mSign == true && a.mSign == false)
+	{
+		return false;
+	}
+	if(mSign == false && a.mSign == true)
+	{
+		return true;
+	}
+	//두 부호가 같다.
+	// if(mLength ^ a.mLength)
+	// {
+	// 	return mLength > a.mLength
+	// }
+
+	if(mLength > a.mLength)
+	{
+		return false;
+	}
+	if(mLength < a.mLength)
+	{
+		return true;
+	}
+	//length same
+	for(int i = mLength ;  i >= 0  ;--i)
+	{
+		if (mString[i] != a.mString[i])
+		{
+			return mString[i] < a.mString[i];
+		}
+	}
+}
+bool bigint::operator>=(const bigint& a) const
+{
+	return !(*this < a);
+}
+bool bigint::operator<=(const bigint& a) const
+{
+	return !(*this > a);
+}
+
+
+
+
+
 std::ostream& operator<<(std::ostream& os, const bigint& a)
 {
 	const int len = a.mLength;
@@ -660,44 +900,6 @@ std::ostream& operator<<(std::ostream& os, const bigint& a)
 }
 
 
-bigint &bigint::operator=(const bigint& a)
-{
-	std::cout << "일반 대입연산자" << '\n';
-	 if (&a == this )
-       {return *this;}
-	if(this->mCapacity != a.mCapacity)
-	{
-		this->mCapacity = a.mCapacity;
-		delete[]this->mString;
-		this->mString = new char[a.mCapacity]();
-	}
-	this->mSign = a.mSign;
-	int len = this->mLength = a.mLength;
-	for(int i = 0 ; i < len ; i++)
-	{
-		this->mString[i] = a.mString[i];
-	}
-	
-
-	return *this;
-}
-bigint::bigint(const bigint &a) : mCapacity(128) , mSign(true), mString(nullptr),mLength(0)
-{
-	std::cout << "복사생성자사용" << '\n';
-	if (this == &a)
-       {return ;}
-	if(mCapacity != a.mCapacity)
-	{
-		mCapacity = a.mCapacity;
-	}
-	mString = new char[a.mCapacity]();
-	mSign = a.mSign;
-	int len = mLength = a.mLength;
-	for(int i = 0 ; i < len ; i++)
-	{
-		mString[i] = a.mString[i];
-	}
-}
 
 // bigint operator=(const char* a);
 // bigint operator=(const int a);
@@ -705,6 +907,110 @@ bigint::bigint(const bigint &a) : mCapacity(128) , mSign(true), mString(nullptr)
 // bigint operator=(const short a);
 // bigint operator=(const long long int a);
 // bigint operator=(const long int a);
+
+// bool operator!=(const bigint& a, const bigint& b);
+// bool operator==(const bigint& a, const bigint& b);
+// bool operator>(const bigint& a, const bigint& b);
+// bool operator<(const bigint& a, const bigint& b);
+// bool operator>=(const bigint& a, const bigint& b);
+// bool operator<=(const bigint& a, const bigint& b);
+
+//friend
+// bool operator==(const bigint& a, const bigint& b)
+// {
+//     if( a.mSign != b.mSign)
+// 	{
+// 		return false;
+// 	}
+// 	if(a.mLength != b.mLength)
+// 	{
+// 		return false;
+// 	}
+//     // 부호도같고 길이도같다.
+//     for(int i = a.mLength ; i >= 0 ; --i)
+//     {
+//         if (a.mString[i] != b.mString[i])
+// 		{
+// 			return false;
+// 		}
+//     }
+//     return true;
+// }
+
+// bool operator>(const bigint& a, const bigint& b)
+// {
+// 	// if(a.mSign !=  b.mSign)
+// 	// {
+// 	// 	return a.mSign >  b.mSign;
+// 	// }
+// 	if( a.mSign == true && b.mSign == false)
+// 	{
+// 		return true;
+// 	}
+// 	if(a.mSign == false && b.mSign == true)
+// 	{
+// 		return false;
+// 	}
+// 	//두 부호가 같다.
+// 	// if(a.mLength ^ b.mLength)
+// 	// {
+// 	// 	return a.mLength > b.mLength
+// 	// }
+
+// 	if(a.mLength > b.mLength)
+// 	{
+// 		return true;
+// 	}
+// 	if(a.mLength < b.mLength)
+// 	{
+// 		return false;
+// 	}
+// 	//length same
+// 	for(int i = a.mLength ;  i >= 0  ;--i)
+// 	{
+// 		if (a.mString[i] != b.mString[i])
+// 		{
+// 			return a.mString[i] > b.mString[i];
+// 		}
+// 	}
+// }
+// bool operator<(const bigint& a, const bigint& b)
+// {
+// 	// if(a.mSign !=  b.mSign)
+// 	// {
+// 	// 	return a.mSign >  b.mSign;
+// 	// }
+// 	if( a.mSign == true && b.mSign == false)
+// 	{
+// 		return false;
+// 	}
+// 	if(a.mSign == false && b.mSign == true)
+// 	{
+// 		return true;
+// 	}
+// 	//두 부호가 같다.
+// 	// if(a.mLength ^ b.mLength)
+// 	// {
+// 	// 	return a.mLength > b.mLength
+// 	// }
+
+// 	if(a.mLength > b.mLength)
+// 	{
+// 		return false;
+// 	}
+// 	if(a.mLength < b.mLength)
+// 	{
+// 		return true;
+// 	}
+// 	//length same
+// 	for(int i = a.mLength ;  i >= 0  ;--i)
+// 	{
+// 		if (a.mString[i] != b.mString[i])
+// 		{
+// 			return a.mString[i] < b.mString[i];
+// 		}
+// 	}
+// }
 
 int main()
 {
