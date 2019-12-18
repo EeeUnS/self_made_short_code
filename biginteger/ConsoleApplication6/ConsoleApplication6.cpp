@@ -18,8 +18,8 @@ public:
 	explicit bigint(const char a); // 8 bit std::int8_t
 	// bigint(const short a); // 16bit std::int16_t
 	bigint(const int a); //32bit std::int32_t
-	bigint(const long long a); // 64bit std::int64_t
-
+	bigint(long long a); // 64bit std::int64_t
+	bigint(unsigned long long a); // 64bit std::uint64_t
 
 
 	//copy 
@@ -27,6 +27,9 @@ public:
 	bigint &operator=(const std::string& a);
 	bigint &operator=(int a);
 	bigint &operator=(char a);
+	bigint &operator=(long long a);
+	bigint &operator=(unsigned long long a);
+
 	bigint(const bigint &a) ;
 	//move
 	bigint &operator=(bigint&& a) noexcept ;
@@ -52,13 +55,6 @@ public:
 	//전위감소
 	bigint& operator--(); 
 	bigint operator--(int);
-
-	// bigint operator=(const char* a);
-	// bigint operator=(const int a);
-	// bigint operator=(const char a);
-	// bigint operator=(const short a);
-	// bigint operator=(const long long int a);
-	// bigint operator=(const long int a);
 
 	bool operator==(const bigint& a) const ;
 	bool operator!=(const bigint& a) const ;
@@ -201,7 +197,26 @@ bigint::bigint(const long long a) // 64bit std::int64_t
 	}
 	mLength = i;
 }
-
+bigint::bigint(unsigned long long a) // 64bit std::uint64_t
+{
+	mString = new char[128]();
+	mCapacity = 128;
+	long long int b = a;
+	mSign = true;
+	if (b < 0)
+	{
+		b = -b;
+		mSign = false;
+	}
+	int i = 0;
+	while (b)
+	{
+		mString[i] = b % 10;
+		b /= 10;
+		i++;
+	}
+	mLength = i;
+}
 
 bigint::bigint(const bigint &a) : mCapacity(128) , mSign(true), mString(nullptr),mLength(0)
 {
@@ -258,6 +273,19 @@ bigint& bigint::operator=(int a)
 {
 	return (*this = bigint(a));
 }
+
+
+bigint& bigint::operator=(long long a)
+{
+	return (*this = bigint(a));
+}
+
+
+bigint& bigint::operator=(unsigned long long a)
+{
+	return (*this = bigint(a));
+}
+
 
 bigint& bigint::operator=(const std::string& a)
 {
