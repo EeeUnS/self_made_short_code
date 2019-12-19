@@ -49,6 +49,23 @@ public:
 	bigint& operator/=(const bigint& a);
 	bigint& operator%=(const bigint& a);
 
+
+    
+	//need
+	const bigint operator+(int a) const;
+	const bigint operator-(int a) const;
+	const bigint operator-() const; // -this 반환
+	const bigint operator*(int a) const;//O(n^2)후에 카라추바로 개선
+	const bigint operator/(int a) const;
+	const bigint operator%(int a) const;
+	bigint& operator+=(int a);
+	bigint& operator-=(int a);
+	bigint& operator*=(int a);//O(n^2)후에 카라추바로 개선
+	bigint& operator/=(int a);
+	bigint& operator%=(int a);
+
+
+
 	//전위증가
 	bigint& operator++();
 	bigint operator++(int);
