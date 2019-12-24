@@ -15,11 +15,11 @@ public:
 	bigint();
 	bigint(const char* a);
 	bigint(const std::string& a);
-	explicit bigint(const char a); // 8 bit std::int8_t
-	// bigint(const short a); // 16bit std::int16_t
+	bigint(const char a); // 8 bit std::int8_t
 	bigint(const int a); //32bit std::int32_t
 	bigint(long long a); // 64bit std::int64_t
 	bigint(unsigned long long a); // 64bit std::uint64_t
+	// bigint(const short a); // 16bit std::int16_t
 
 
 	//copy 
@@ -54,7 +54,6 @@ public:
 	//need
 	const bigint operator+(int a) const;
 	const bigint operator-(int a) const;
-	const bigint operator-() const; // -this 반환
 	const bigint operator*(int a) const;//O(n^2)후에 카라추바로 개선
 	const bigint operator/(int a) const;
 	const bigint operator%(int a) const;
@@ -482,7 +481,7 @@ const bigint bigint::operator/(const bigint& a) const
 	const int aLen = a.mLength;
 	const int thisLen = mLength;
 
-	bigint digit = 0 ;
+	bigint digit(0) ;
 	for(int i = 0 ; i < aLen ; ++i)
 	{
 		digit = digit *10 + mString[thisLen - i - 1];
@@ -519,7 +518,7 @@ const bigint bigint::operator%(const bigint& a) const
 	const int aLen = a.mLength;
 	const int thisLen = mLength;
 
-	bigint digit = 0 ;
+	bigint digit(0) ;
 	for(int i = 0 ; i < aLen ; ++i)
 	{
 		digit = digit *10 + mString[thisLen - i - 1];
@@ -602,6 +601,51 @@ bigint& bigint::operator%=(const bigint& a)
 	return (*this = *this % a);
 }
 
+
+// 	//need
+// const bigint bigint::operator+(int a) const
+// {
+// 	if( (a<0) && mSign)
+// 	bigint tmp;
+// 	tmp.mSign = a.mSign;
+// 	tmp.mCapacity = a.mCapacity > mCapacity ? a.mCapacity : mCapacity;
+// 	if ((a.mCapacity == a.mLength) || (mCapacity == mLength)) //overflow고려안해도됨
+// 	{
+// 		tmp.mCapacity *= 2;
+// 	}
+// 	if (tmp.mCapacity > 128)
+// 	{
+// 		delete[]tmp.mString;
+// 		tmp.mString = new char[tmp.mCapacity]();
+// 	}
+
+// 	tmp.mLength = a.mLength > mLength ? a.mLength : mLength;
+// 	int carry = 0;
+// 	int Length = tmp.mLength;
+// 	for (int i = 0; i < Length; i++)
+// 	{
+// 		carry = mString[i] + a.mString[i] + carry;
+// 		tmp.mString[i] = carry % 10;
+// 		carry /= 10;
+// 	}
+// 	if (carry != 0)
+// 	{
+// 		tmp.mString[Length] = carry;
+// 		tmp.mLength++;
+// 	}
+// 	return tmp;
+// }
+// const bigint bigint::operator-(int a) const;
+// const bigint bigint::operator*(int a) const;//O(n^2)후에 카라추바로 개선
+// const bigint bigint::operator/(int a) const;
+// const bigint bigint::operator%(int a) const;
+// bigint& bigint::operator+=(int a);
+// bigint& bigint::operator-=(int a);
+// bigint& bigint::operator*=(int a);//O(n^2)후에 카라추바로 개선
+// bigint& bigint::operator/=(int a);
+// bigint& bigint::operator%=(int a);
+
+
 //전위증가
 bigint& bigint::operator++()
 {
@@ -627,6 +671,7 @@ bigint bigint::operator--(int)
 	return tmp;
 
 }
+
 
 bool bigint::operator==(const bigint& a) const
 {
@@ -736,7 +781,7 @@ int main()
 {
 	bigint a("1111");
 	bigint b("2222");
-	bigint c = '3';
+	bigint c('3');
 	a = 3333;
 	std::cout << a << '\n';  
 	a = '1';  
