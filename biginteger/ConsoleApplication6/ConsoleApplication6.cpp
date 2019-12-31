@@ -49,22 +49,6 @@ public:
 	bigint& operator/=(const bigint& a);
 	bigint& operator%=(const bigint& a);
 
-
-    
-	//need
-	const bigint operator+(int a) const;
-	const bigint operator-(int a) const;
-	const bigint operator*(int a) const;//O(n^2)후에 카라추바로 개선
-	const bigint operator/(int a) const;
-	const bigint operator%(int a) const;
-	bigint& operator+=(int a);
-	bigint& operator-=(int a);
-	bigint& operator*=(int a);//O(n^2)후에 카라추바로 개선
-	bigint& operator/=(int a);
-	bigint& operator%=(int a);
-
-
-
 	//전위증가
 	bigint& operator++();
 	bigint operator++(int);
@@ -78,6 +62,28 @@ public:
 	bool operator<(const bigint& a) const ;
 	bool operator>=(const bigint& a) const ;
 	bool operator<=(const bigint& a) const ;
+
+	
+    
+	// integer
+	const bigint operator+(int a) const;
+	const bigint operator-(int a) const;
+	const bigint operator*(int a) const;//O(n^2)후에 카라추바로 개선
+	const bigint operator/(int a) const;
+	const bigint operator%(int a) const;
+	bigint& operator+=(int a);
+	bigint& operator-=(int a);
+	bigint& operator*=(int a);//O(n^2)후에 카라추바로 개선
+	bigint& operator/=(int a);
+	bigint& operator%=(int a);
+	
+	bool operator==(const int a) const ;
+	bool operator!=(const int a) const ;
+	bool operator>(const int a) const ;
+	bool operator<(const int a) const ;
+	bool operator>=(const int a) const ;
+	bool operator<=(const int a) const ;
+
 
 	friend std::ostream& operator<<(std::ostream& os, const bigint& a);
 	friend std::istream& operator>>(std::istream& os, bigint& a);
@@ -752,8 +758,17 @@ bool bigint::operator<=(const bigint& a) const
 	return !(*this > a);
 }
 
-
-
+	// const bigint bigint::operator+(int a) const;
+	// const bigint bigint::operator-(int a) const;
+	// const bigint bigint::operator*(int a) const;//O(n^2)후에 카라추바로 개선
+	// const bigint bigint::operator/(int a) const;
+	// const bigint bigint::operator%(int a) const;
+	// bigint& bigint::operator+=(int a);
+	// bigint& bigint::operator-=(int a);
+	// bigint& bigint::operator*=(int a);//O(n^2)후에 카라추바로 개선
+	// bigint& bigint::operator/=(int a);
+	// bigint& bigint::operator%=(int a);
+	
 
 
 std::ostream& operator<<(std::ostream& os, const bigint& a)
