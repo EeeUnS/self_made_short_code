@@ -791,11 +791,6 @@ bool bigint::operator<=(const bigint& a) const
 
 std::ostream& operator<<(std::ostream& os, const bigint& a)
 {
-	// if(a.mLength == 0)
-	// {
-	// 	os << '0';
-	// }
-
 	if (a.mSign == false)
 	{
 		os << '-';
@@ -810,7 +805,6 @@ std::ostream& operator<<(std::ostream& os, const bigint& a)
 
 std::istream& operator>>(std::istream& os, bigint& a)
 {
-	//char str[10005];
 	std::string str;
 	os >> str;
 	a = bigint(str);
