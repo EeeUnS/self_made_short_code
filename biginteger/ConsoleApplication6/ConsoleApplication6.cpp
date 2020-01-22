@@ -10,7 +10,6 @@ SR_NS_END(euns)
 #include<iostream>
 #include <assert.h>
 
-// DEFAULT 변수로 바꾸기
 class bigint //char형 배열 각 자릿수마다
 {
 public:
@@ -21,22 +20,21 @@ public:
 	bigint(const int a); //32bit std::int32_t
 	bigint(long long a); // 64bit std::int64_t
 	bigint(unsigned long long a); // 64bit std::uint64_t
-	// bigint(const short a); // 16bit std::int16_t
 
 
 	//copy
 	bigint& operator=(const bigint& a);
-
 	bigint(const bigint& a);
+
 	//move
 	bigint& operator=(bigint&& a) noexcept;
 	bigint(bigint&& a) noexcept;
-	~bigint();
 
+	~bigint();
 
 	const bigint operator+(const bigint& a) const;
 	const bigint operator-(const bigint& a) const;
-	const bigint operator-() const; // -this 반환
+	const bigint operator-() const; // -this return
 	const bigint operator*(const bigint& a) const;//O(n^2)후에 카라추바로 개선
 	const bigint operator/(const bigint& a) const;
 	const bigint operator%(const bigint& a) const;
@@ -73,7 +71,7 @@ private:
 	int mCapacity; //default
 	bool mSign;//+ : true - : false 여부 결정
 
-	static constexpr int DEFAULT = 10010;
+	static constexpr int DEFAULT = 100;
 };
 
 const bigint bigint::abs() const
@@ -119,7 +117,6 @@ const bigint bigint::sub(const bigint& a) const
 	}
 
 	assert(tmp.abs() > b->abs());
-	//assert(tmp.mSign == );
 
 	const int  slen = b->mLength;
 	for (int i = 0; i <= slen; ++i)
@@ -219,8 +216,6 @@ const bigint bigint::add(const bigint& a) const
 
 	return tmp;
 }
-
-
 
 //0으로 default mLength가 1이고 mString[0]이 0인지 확인
 bigint::bigint() :mString(nullptr), mLength(1), mCapacity(DEFAULT), mSign(true)
@@ -355,7 +350,12 @@ bigint::bigint(const int a) :mString(nullptr), mLength(1), mCapacity(DEFAULT), m
 	mCapacity = DEFAULT;
 	int b = a;
 	mSign = true;
-	if (b < 0)
+
+	if( b == 0 )
+	{
+		return ;
+	}
+	else if (b < 0)
 	{
 		b = -b;
 		mSign = false;
@@ -370,13 +370,18 @@ bigint::bigint(const int a) :mString(nullptr), mLength(1), mCapacity(DEFAULT), m
 	mLength = i;
 }
 
-bigint::bigint(const long long a) : mString(nullptr), mLength(1),mCapacity(DEFAULT), mSign(true)
+bigint::bigint(long long a) : mString(nullptr), mLength(1),mCapacity(DEFAULT), mSign(true)
 {
 	mString = new char[DEFAULT]();
 	mCapacity = DEFAULT;
 	long long int b = a;
 	mSign = true;
-	if (b < 0)
+
+	if( b == 0 )
+	{
+		return ;
+	}
+	else if (b < 0)
 	{
 		b = -b;
 		mSign = false;
@@ -396,7 +401,12 @@ bigint::bigint(unsigned long long a) :mString(nullptr), mLength(1), mCapacity(DE
 	mCapacity = DEFAULT;
 	long long int b = a;
 	mSign = true;
-	if (b < 0)
+
+	if( b == 0 )
+	{
+		return ;
+	}
+	else if (b < 0)
 	{
 		b = -b;
 		mSign = false;
@@ -459,11 +469,10 @@ bigint& bigint::operator=(const bigint& a)
 
 bigint& bigint::operator=(bigint&& a) noexcept
 {
-	//std::cerr << "이동 =" << std::endl;
 	mString = a.mString;
-	mSign = (a.mSign);
-	mLength = (a.mLength);
-	mCapacity = (a.mCapacity);
+	mSign = a.mSign;
+	mLength = a.mLength;
+	mCapacity = a.mCapacity;
 
 	a.mString = nullptr;
 	return *this;
@@ -471,7 +480,6 @@ bigint& bigint::operator=(bigint&& a) noexcept
 
 bigint::bigint(bigint&& a)noexcept :mString(a.mString), mLength(a.mLength), mCapacity(a.mCapacity), mSign(a.mSign)
 {
-	//std::cerr << "이동 생성자 호출 !" << std::endl;
 	a.mString = nullptr;
 }
 
@@ -513,33 +521,43 @@ const bigint bigint::operator-() const
 
 const bigint bigint::operator*(const bigint& a) const
 {
-	if (a == 0)
+	if (a == 0 || *this  == 0)
 	{
-		return bigint(0);
+		return bigint();
 	}
+
 	bigint tmp;
-	tmp.mSign = false;//-
 	if (a.mSign == mSign)
 	{
-		tmp.mSign = true;//+
+		tmp.mSign = true;
 	}
-	tmp.mCapacity = a.mCapacity > mCapacity ? a.mCapacity * 2 : mCapacity * 2;
-	delete[]tmp.mString;
-	tmp.mString = new char[tmp.mCapacity]();
-	tmp.mLength = a.mLength + mLength - 1;
-	int aLength = a.mLength;
-	int thisLength = mLength;
-	int carry = 0;
-	for (int i = 0; i < aLength; ++i)
+	else
 	{
-		for (int j = 0; j < thisLength; ++j)
+		tmp.mSign = false;
+	}
+
+	if(a.mLength + mLength >= mCapacity)
+	{
+		tmp.mCapacity = a.mCapacity > mCapacity ? a.mCapacity * 2 : mCapacity * 2;
+		delete[]tmp.mString;
+		tmp.mString = new char[tmp.mCapacity]();
+	}
+
+	tmp.mLength = a.mLength + mLength - 1;
+
+	int carry = 0;
+	for (int i = 0; i < a.mLength; ++i)
+	{
+		carry = 0;
+		for (int j = 0; j < mLength; ++j)
 		{
-			carry = mString[j] * a.mString[i] + carry;
-			tmp.mString[i + j] += carry % 10;
+			carry = a.mString[i] * mString[j]  + tmp.mString[i + j] + carry;
+			tmp.mString[i + j] = carry % 10;
 			carry /= 10;
 		}
-		tmp.mString[i + thisLength] += carry;
+		tmp.mString[i + mLength] += carry;
 	}
+
 	if (carry != 0)
 	{
 		++tmp.mLength;
@@ -685,10 +703,12 @@ bool bigint::operator==(const bigint& a) const
 	{
 		return false;
 	}
+
 	if (mLength != a.mLength)
 	{
 		return false;
 	}
+
 	// 부호도같고 길이도같다.
 	for (int i = mLength; i >= 0; --i)
 	{
@@ -697,6 +717,7 @@ bool bigint::operator==(const bigint& a) const
 			return false;
 		}
 	}
+
 	return true;
 }
 
@@ -770,6 +791,11 @@ bool bigint::operator<=(const bigint& a) const
 
 std::ostream& operator<<(std::ostream& os, const bigint& a)
 {
+	// if(a.mLength == 0)
+	// {
+	// 	os << '0';
+	// }
+
 	if (a.mSign == false)
 	{
 		os << '-';
@@ -791,76 +817,11 @@ std::istream& operator>>(std::istream& os, bigint& a)
 	return os;
 }
 
-// const bigint bigint::operator+(int a) const;
-// const bigint bigint::operator-(int a) const;
-// const bigint bigint::operator*(int a) const;//O(n^2)후에 카라추바로 개선
-// const bigint bigint::operator/(int a) const;
-// const bigint bigint::operator%(int a) const;
-// bigint& bigint::operator+=(int a);
-// bigint& bigint::operator-=(int a);
-// bigint& bigint::operator*=(int a);//O(n^2)후에 카라추바로 개선
-// bigint& bigint::operator/=(int a);
-// bigint& bigint::operator%=(int a);
-
 
 int main()
 {
 
-	bigint a, b;
-	//std::cin >> a >> b;
-	if(b == 0)
-	{
-		std::cout << "yes";
-	}
-	else
-	{
-		std::cout << "no";
-	}
-
-	std::cout << a * b;
-
-
+	using namespace std;
+	cout << "complete";
 	return 0;
 }
-
-//std::string strr = "1532";
-
-//bigint a = "10000";
-//bigint b = "2223";
-//bigint c = strr;
-//std::cin >> a >> b;
-//std::cin >> a+b;
-//std::cout << c << std::endl;
-//std::cout <<
-// std::cout << a << '\n' <<b <<'\n';
-// std::cout << b - a <<'\n' << a + b<<"\n ------------------------\n";
-
-// bigint c = "-12345";
-// bigint d = "-34567";
-
-// std::cout << c << '\n' << d <<'\n';
-// std::cout << c - d <<'\n' << c + d<<"\n ------------------------\n";
-// //20000 -40000
-// std::cout << a << '\n' << c <<'\n';
-// std::cout << a - c <<'\n' << a + c<<"\n ------------------------\n";
-
-// // std::cout << (a > c) << std::endl;
-////뺄셈 무한루프
-//1099511627776 1073741824
-//1100585369600
-//123456789123456789123456789
-//987654321987654321987654321
-//1111111111111111111111111110
-// 10000
-// 2223
-// 7777
-// 12223
-//  ------------------------
-// -10000
-// -30000
-// -20000 -> 20000
-// -40000
-//  ------------------------
-// 10000
-// -10000
-// -20000 - > 20000
