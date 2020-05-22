@@ -89,3 +89,20 @@ unsigned long long int exponent(const unsigned long long int base, const unsigne
 	}
 	return y ;
 }
+
+
+unsigned long long int factorialMod(unsigned long long int n, unsigned long long int mod)
+{
+	if (n == 0)
+	{
+		return 1;
+	}
+	unsigned long long int tmp = 1;
+	for (int i = 2; i <= n; i++)
+	{
+		tmp *= i;
+		tmp %=mod;
+	}
+	return tmp;
+}
+
